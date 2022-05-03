@@ -63,13 +63,12 @@ const Code = ({ inline, children = [], className, ...props }) => {
     return <code className={String(className)}>{children}</code>;
   };
 
-export default function UMLEditor({value}) {
+export default function UMLPreviewer({value, prefix}) {
   return (
     <div>
         <div data-color-mode="light">
           <MarkdownPreview
-            source={PREFIX+value+SUFFIX}
-            // source={value}
+            source={PREFIX+prefix+"\n"+value+SUFFIX}
             height={600}
             components={{
               code: Code

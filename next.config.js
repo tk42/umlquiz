@@ -2,8 +2,9 @@
 const removeImports = require('next-remove-imports')();
 module.exports = removeImports({
     reactStrictMode: true,
-    assetPrefix: '/umlquiz/',
-    // pageExtensions: ['page.tsx', 'page.ts'],
+    // when you deploy to github pages, you should specify this following
+    // https://wallis.dev/blog/deploying-a-next-js-app-to-github-pages
+    // assetPrefix: '/umlquiz/',
     images: {
       domains: [],
     },
