@@ -2,6 +2,7 @@
 const removeImports = require('next-remove-imports')();
 module.exports = removeImports({
     reactStrictMode: true,
+    assetPrefix: '/umlquiz/',
     // pageExtensions: ['page.tsx', 'page.ts'],
     images: {
       domains: [],
