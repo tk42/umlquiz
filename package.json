@@ -1,56 +1,39 @@
 {
-  "name": "next-ts-template",
+  "name": "umlquiz",
+  "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev-ip": "next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "lint:eslint": "eslint --cache .",
-    "lint:prettier": "prettier --check .",
-    "test": "jest --watch",
-    "test-cov": "jest --collectCoverage=true --coverageReporters=json-summary",
-    "component": "scaffdog generate component"
-  },
-  "prettier": {
-    "trailingComma": "es5",
-    "semi": false,
-    "singleQuote": true,
-    "printWidth": 120
+    "lint": "next lint"
   },
   "dependencies": {
-    "next": "12.1.5",
-    "nprogress": "0.2.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "react-error-boundary": "3.1.4"
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@mui/material": "^5.6.4",
+    "@types/mermaid": "8.2.8",
+    "@uiw/react-markdown-editor": "^4.0.3",
+    "@uiw/react-markdown-preview": "^4.0.6",
+    "@uiw/react-md-editor": "3.9.9",
+    "mermaid": "8.14.0",
+    "mermaid.cli": "^0.5.1",
+    "next": "12.1.6",
+    "next-remove-imports": "^1.0.6",
+    "react": "18.1.0",
+    "react-dom": "18.1.0",
+    "react-markdown": "^8.0.3",
+    "rehype-katex": "^6.0.2",
+    "remark-math": "^5.1.1",
+    "remark-mermaid": "^0.2.0",
+    "remark-mermaidjs": "^2.1.1"
   },
   "devDependencies": {
-    "@testing-library/jest-dom": "5.16.4",
-    "@testing-library/react": "12.1.5",
-    "@types/node": "16.11.27",
-    "@types/nprogress": "0.2.0",
-    "@types/react": "17.0.44",
-    "@typescript-eslint/eslint-plugin": "5.20.0",
-    "@typescript-eslint/parser": "5.20.0",
-    "eslint": "8.9.0",
-    "eslint-config-next": "12.1.5",
-    "eslint-config-prettier": "8.3.0",
-    "eslint-plugin-import": "2.25.3",
-    "eslint-plugin-simple-import-sort": "7.0.0",
-    "husky": "7.0.4",
-    "jest": "^27.5.1",
-    "lint-staged": "12.3.8",
-    "prettier": "2.5.1",
-    "scaffdog": "1.1.0",
-    "ts-jest": "27.1.4",
-    "typescript": "4.5.5"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ]
+    "@types/node": "17.0.31",
+    "@types/react": "18.0.8",
+    "@types/react-dom": "18.0.3",
+    "eslint": "8.14.0",
+    "eslint-config-next": "12.1.6",
+    "typescript": "4.6.4"
   }
 }
