@@ -7,4 +7,8 @@ module.exports = removeImports({
       domains: [],
     },
     swcMinify: true,
+    i18n: {
+      locales: ["en", "ja"],
+      defaultLocale: "ja",
+    },
 });

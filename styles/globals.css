@@ -30,6 +30,7 @@ a {
   background-color: #000; /* 画像がない場合のフォールバック */
   background-image: url("bg.jpeg"); /* 画像のパスを指定 */
   background-size: cover;
+  background-attachment: fixed;
   background-position: center center;
   background-repeat: no-repeat;
   width: 100%;
