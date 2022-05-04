@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import ast
 import zmq
 import datetime
 import logging
@@ -8,15 +9,27 @@ from datetime import datetime
 
 from pydantic import BaseModel
 from typing import Optional #List
-from fastapi import FastAPI, Response, HTTPException, Query, Form
+from fastapi import FastAPI, Response, HTTPException, Query, Form, Depends
+from fastapi.security import OAuth2PasswordBearer
+
+is_prod = bool(ast.literal_eval(os.environ.get("IS_PROD", "False")))
+
+AUTH_USERNAME = os.environ.get("AUTH_USERNAME")
+assert AUTH_USERNAME, "AUTH_USERNAME is empty"
+
+AUTH_PASSWORD = os.environ.get("AUTH_PASSWORD")
+assert AUTH_PASSWORD, "AUTH_PASSWORD is empty"
 
 app = FastAPI(
     title="UMLQUIZ API",
     description="DM API FOR UMLQUIZ.COM",
     version="1.0.0",
-    redoc_url="/redoc",
-    docs_url="/explorer",
+    redoc_url=None if is_prod else "/redoc",
+    docs_url=None if is_prod else "/explorer",
+    openapi_url=None if is_prod else "/openapi.json"
 )
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
 class RawResponse(Response):
@@ -86,6 +99,25 @@ context = zmq.Context()
 socket = context.socket(zmq.REQ)
 socket.connect("tcp://localhost:5556")
 
+####
+##  Authorize
+####
+from fastapi.param_functions import Depends
+from fastapi.security.oauth2 import OAuth2PasswordRequestForm
+from .oauth2 import create_access_token
+
+@app.post('/token')
+def get_token(request: OAuth2PasswordRequestForm = Depends()):
+    if request.username == AUTH_USERNAME and request.password == AUTH_PASSWORD:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail='Failed Authentication'
+        )
+    access_token = create_access_token(data={'sub': AUTH_USERNAME})
+    return {
+        'access_token': access_token,
+        'token_type': 'bearer',
+    }
 
 ####
 ##  User
@@ -95,7 +127,8 @@ socket.connect("tcp://localhost:5556")
 async def post_user(
         username: str = Form(...),
         password: str = Form(...),
-        email: str = Form(...)
+        email: str = Form(...),
+        token: str = Depends(oauth2_scheme)
     ):
     socket.send_json(
         {
@@ -111,7 +144,10 @@ async def post_user(
     return RawResponse(content=socket.recv())
 
 @app.get("/user/{user_id}")
-async def get_user(user_id: str):
+async def get_user(
+        user_id: str,
+        token: str = Depends(oauth2_scheme)
+    ):
     socket.send_json(
         {
             "group": "user",
@@ -124,7 +160,11 @@ async def get_user(user_id: str):
     return RawResponse(content=socket.recv())
 
 @app.put("/user/{user_id}")
-async def put_user(user_id: str, user: User = Form(...)):
+async def put_user(
+        user_id: str, 
+        user: User = Form(...),
+        token: str = Depends(oauth2_scheme)
+    ):
     d = {k: v.value if type(v) in [Membership] else v for k, v in user.dict().items()}
     socket.send_json(
         {
@@ -140,7 +180,10 @@ async def put_user(user_id: str, user: User = Form(...)):
 
 
 @app.delete("/user/{user_id}")
-async def delete_user(user_id: str):
+async def delete_user(
+        user_id: str,
+        token: str = Depends(oauth2_scheme)
+    ):
     socket.send_json(
         {
             "group": "user",
@@ -158,7 +201,9 @@ async def delete_user(user_id: str):
 ####
 
 @app.get("/quiz")
-async def get_quiz():
+async def get_quiz(
+        token: str = Depends(oauth2_scheme)
+    ):
     socket.send_json(
         {
             "group": "quiz",
@@ -173,6 +218,7 @@ async def post_quiz(
         quiz_id: str,
         language: str = Form(...),
         quiz: Quiz = Form(...),
+        token: str = Depends(oauth2_scheme)
     ):
     d = {k: v.value if type(v) in [Diagram, QuizStatus] else v for k, v in quiz.dict().items()}
     socket.send_json(
@@ -192,7 +238,8 @@ async def post_quiz(
 @app.put("/quiz/{quiz_id}")
 async def put_quiz(
         quiz_id: str,
-        quiz: Quiz = Form(...)
+        quiz: Quiz = Form(...),
+        token: str = Depends(oauth2_scheme)
     ):
     d = {k: v.value if type(v) in [Diagram, QuizStatus] else v for k, v in quiz.dict().items()}
     socket.send_json(
@@ -214,7 +261,10 @@ async def put_quiz(
 
 
 @app.get("/{user_id}/quiz")
-async def get_quizs_by_user(user_id: str):
+async def get_quizs_by_user(
+        user_id: str,
+        token: str = Depends(oauth2_scheme)
+    ):
     socket.send_json(
         {
             "group": "quizs_by_user",
@@ -228,7 +278,11 @@ async def get_quizs_by_user(user_id: str):
 
 
 @app.get("/{user_id}/quiz/{quiz_id}")
-async def get_quiz_by_user(user_id: str, quiz_id: str):
+async def get_quiz_by_user(
+        user_id: str,
+        quiz_id: str,
+        token: str = Depends(oauth2_scheme)
+    ):
     socket.send_json(
         {
             "group": "quiz_by_user",
@@ -246,7 +300,8 @@ async def get_quiz_by_user(user_id: str, quiz_id: str):
 @app.post("/{user_id}/quiz")
 async def post_quiz_by_user(
         user_id: str,
-        quiz: Quiz = Form(...)
+        quiz: Quiz = Form(...),
+        token: str = Depends(oauth2_scheme)
     ):
     socket.send_json(
         {
@@ -266,7 +321,8 @@ async def post_quiz_by_user(
 async def put_quiz_by_user(
         user_id: str,
         quiz_id: str,
-        quiz: Quiz = Form(...)
+        quiz: Quiz = Form(...),
+        token: str = Depends(oauth2_scheme)
     ):
     socket.send_json(
         {
@@ -283,7 +339,11 @@ async def put_quiz_by_user(
 
 
 @app.delete("/{user_id}/quiz/{quiz_id}")
-async def delete_quiz_by_user(user_id: str, quiz_id: str):
+async def delete_quiz_by_user(
+        user_id: str,
+        quiz_id: str,
+        token: str = Depends(oauth2_scheme)
+    ):
     socket.send_json(
         {
             "group": "quiz_by_user",
