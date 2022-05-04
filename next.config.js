@@ -1,9 +1,9 @@
 /** @type {import('next').NextConfig} */
-const { i18n } = require('./next-i18next.config');
 const removeImports = require('next-remove-imports')();
 
 module.exports = removeImports({
     reactStrictMode: true,
+    trailingSlash: true,
     // when you deploy to github pages, you should specify this following
     // https://wallis.dev/blog/deploying-a-next-js-app-to-github-pages
     // assetPrefix: '/umlquiz/',
@@ -11,5 +11,4 @@ module.exports = removeImports({
       domains: [],
     },
     swcMinify: true,
-    i18n,
 });
