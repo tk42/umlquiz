@@ -66,6 +66,7 @@ class Quiz(Base):
     quiz_id = Column(String(255), primary_key=True)
     language = Column(String(8), primary_key=True)
     diagram_type = Column(String(16))
+    level = Column(String(16))
     text = Column(TEXT)
     diagram = Column(TEXT)
     likes = Column(Integer)

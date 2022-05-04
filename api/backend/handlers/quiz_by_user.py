@@ -12,6 +12,7 @@ def post(
         quiz_id = str(uuid.uuid4()),
         language = quiz["language"],
         diagram_type = quiz["diagram_type"],
+        level = quiz["level"],
         text = quiz["text"],
         diagram = quiz["diagram"],
         likes = 0,

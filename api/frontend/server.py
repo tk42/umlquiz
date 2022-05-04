@@ -73,6 +73,7 @@ class Quiz(BaseModel):
     quiz_id: str
     language: str
     diagram_type: DiagramType
+    level: str
     text: str
     diagram: str
     likes: int
