@@ -25,4 +25,4 @@ def put(
         q = s.query(Quiz).filter(Quiz.quiz_id==quiz_id).first()
         for k, v in quiz.items():
             setattr(q, k, v)
-    return user
+    return quiz

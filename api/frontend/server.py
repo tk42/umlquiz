@@ -9,7 +9,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 from typing import Optional #List
-from fastapi import FastAPI, Response, HTTPException, Query, Form, Depends
+from fastapi import FastAPI, Response, HTTPException, Query, Form, Depends, status
 from fastapi.security import OAuth2PasswordBearer
 
 is_prod = bool(ast.literal_eval(os.environ.get("IS_PROD", "False")))
@@ -108,7 +108,7 @@ from .oauth2 import create_access_token
 
 @app.post('/token')
 def get_token(request: OAuth2PasswordRequestForm = Depends()):
-    if request.username == AUTH_USERNAME and request.password == AUTH_PASSWORD:
+    if request.username != AUTH_USERNAME or request.password != AUTH_PASSWORD:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail='Failed Authentication'
