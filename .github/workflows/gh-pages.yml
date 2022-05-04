@@ -32,16 +32,14 @@ jobs:
     - name: install
       run: yarn install
 
-    # Next.jsアプリをビルドする
-    # プロジェクトルート直下に.nextディレクトリができる
+    # yarn build = next build && next export
+    # * Next.jsアプリをビルドする
+    #   プロジェクトルート直下に.nextディレクトリができる
+    # * 静的なHTMLとしてNext.jsアプリを生成する
+    #   プロジェクトルート直下にoutディレクトリができる
+    #   そのなかに、HTMLファイル群と、それらが読み込むJSファイル群を収めた_nextディレクトリがある
     - name: build
-      run: next build
-
-    # 静的なHTMLとしてNext.jsアプリを生成する
-    # プロジェクトルート直下にoutディレクトリができる
-    # そのなかに、HTMLファイル群と、それらが読み込むJSファイル群を収めた_nextディレクトリがある
-    - name: export
-      run: next export
+      run: yarn build
 
     # しかしGitHub Pagesの仕様として_から始まるディレクトリが見えず404となる
     # つまりHTMLからJSを読み込めない
