@@ -1,3 +1,5 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": "next/core-web-vitals",
+  // To suppress 'Parsing Error: Missing Semicolon' in json
+  "parser": "@typescript-eslint/parser"
 }

@@ -1,5 +1,7 @@
 /** @type {import('next').NextConfig} */
+const { i18n } = require('./next-i18next.config');
 const removeImports = require('next-remove-imports')();
+
 module.exports = removeImports({
     reactStrictMode: true,
     // when you deploy to github pages, you should specify this following
@@ -9,8 +11,5 @@ module.exports = removeImports({
       domains: [],
     },
     swcMinify: true,
-    // i18n: {
-    //   locales: ["en", "ja"],
-    //   defaultLocale: "en",
-    // },
+    i18n,
 });

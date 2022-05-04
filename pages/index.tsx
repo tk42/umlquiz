@@ -1,3 +1,15 @@
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+
+export async function getStaticProps({ locale }: {locale: string}) {
+  return {
+    props: {
+      ...await serverSideTranslations(locale, ['common']),
+    }
+  };
+}
+
+
 import UMLPreviewer from "../components/umlpreview";
 import { Typography, Button, Grid } from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -39,6 +51,8 @@ class Zebra{
 `;
 
 function HomePage() {
+  const { t } = useTranslation('common');
+
   const [value, setValue] = useState(mdMermaid);
 
   const handleChangeMarkdown = (
@@ -50,15 +64,10 @@ function HomePage() {
   return (
     <div className="bg">
       <Typography variant={"h1"}>UML Quiz</Typography>
-      <p>
-        The Unified Modeling Language (UML) is a general-purpose, developmental,
-        modeling language in the field of software engineering that is intended
-        to provide a standard way to visualize the design of a system. umlquiz.com
-        helps to improve your UML writing skill.
-      </p>
+      <p>{t('intro')}</p>
       <div className="glass">
-        <Typography variant={"h2"}>Notation</Typography>
-        <Typography variant={"h4"}>Class Diagram</Typography>
+        <Typography variant={"h2"}>{t('notation')}</Typography>
+        <Typography variant={"h4"}>{t('caption_classdiagram')}</Typography>
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <TextField
