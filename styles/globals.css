@@ -52,17 +52,30 @@ a {
   border-radius: 15px;
   -webkit-backdrop-filter: blur(20px); /* ぼかしエフェクト */
   backdrop-filter: blur(20px);
-  box-shadow: 0 5px 20px rgba(255, 152, 79, 0.5); /* 薄い影 */
+  box-shadow: 0 5px 20px rgba(255, 255, 255, 0.5); /* 薄い影 */
+  margin: 10px;
 }
 
 /* ガラス内の要素 */
-.glass h1 {
+.glass h1 h2 h3 {
   text-align: center;
   color: #000;
   font-family: "Heebo", sans-serif;
   font-size: 50px;
   font-weight: bold;
   letter-spacing: 0.06em;
+}
+
+.glass h1 {
+  font-size: 48px;
+}
+
+.glass h2 {
+  font-size: 36px;
+}
+
+.glass h3 {
+  font-size: 24px;
 }
 
 .glass p {
