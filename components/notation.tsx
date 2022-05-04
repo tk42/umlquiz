@@ -17,10 +17,10 @@ classA3 --> classB3 : Association
 classA4 ..> classB4 : Dependency
 classA5 ..|> classB5 : Realization`;
 
-const notation_sequences = `Alice->>+John: Hello John, how are you?
-Alice-->>+John: John, can you hear me?
-John-)-Alice: Hi Alice, I can hear you! (async)
-John--)-Alice: I feel great! (async)`;
+const notation_sequences = `Alice->>+Bob: Hello Bob, how are you?
+Alice-->>+Bob: Bob, can you hear me?
+Bob-)-Alice: Hi Alice, I can hear you! (async)
+Bob--)-Alice: I feel great! (async)`;
 
 
 export default function Notation() {
