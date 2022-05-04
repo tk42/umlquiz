@@ -1,14 +1,8 @@
 import {
   useTranslation,
-  useLanguageQuery,
-  LanguageSwitcher,
 } from "next-export-i18n";
 
-import Box from '@mui/material/Box';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Select, { SelectChangeEvent } from '@mui/material/Select';
+import Link from 'next/link';
 
 import UMLPreviewer from "../components/umlpreview";
 import { Typography, Button, Grid } from "@mui/material";
@@ -27,6 +21,11 @@ classA2 --o classB2 : Aggregation
 classA3 --> classB3 : Association
 classA4 ..> classB4 : Dependency
 classA5 ..|> classB5 : Realization`;
+
+const notation_sequences = `Alice->>+John: Hello John, how are you?
+Alice-->>+John: John, can you hear me?
+John-)-Alice: Hi Alice, I can hear you! (async)
+John--)-Alice: I feel great! (async)`;
 
 const mdMermaid = `Animal <|-- Duck
 Animal <|-- Fish
@@ -54,9 +53,9 @@ function HomePage() {
   const { t } = useTranslation();
   const [lang, setLang] = useState('en');
 
-  const handleChangeLang = (event: SelectChangeEvent) => {
-    setLang(event.target.value as string);
-  };
+  // const handleChangeLang = (event: SelectChangeEvent) => {
+  //   setLang(event.target.value as string);
+  // };
 
   const [value, setValue] = useState(mdMermaid);
 
@@ -67,23 +66,11 @@ function HomePage() {
   };
 
   return (
-    <LanguageSwitcher lang={lang}>
-      <Box sx={{ minWidth: 120 }}>
-        <FormControl fullWidth>
-          <InputLabel>Language</InputLabel>
-          <Select
-            value={lang}
-            onChange={handleChangeLang}
-          >
-            <MenuItem value={'en'}>English</MenuItem>
-            <MenuItem value={'fr'}>Français</MenuItem>
-            <MenuItem value={'ja'}>日本語</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
-
       <div className="bg">
         <Typography variant={"h1"}>UML Quiz</Typography>
+        <p>
+          <Link href={"/?lang=en"}>English</Link>/<Link href={"/?lang=fr"}>Français</Link>/<Link href={"/?lang=ja"}>日本語</Link>
+        </p>
         <p>{t('intro')}</p>
         <div className="glass">
           <Typography variant={"h2"}>{t('notation')}</Typography>
@@ -117,6 +104,21 @@ function HomePage() {
               />
             </Grid>
           </Grid>
+          <Typography variant={"h4"}>{t('caption_sequencediagram')}</Typography>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                label="Sequence"
+                multiline
+                rows={4}
+                fullWidth
+                defaultValue={notation_sequences}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <UMLPreviewer value={notation_sequences} prefix={"sequenceDiagram"} />
+            </Grid>
+          </Grid>
         </div>
         <div className="glass">
           <Typography variant={"h2"}>Q1</Typography>
@@ -140,7 +142,6 @@ function HomePage() {
           <Button>Submit</Button>
         </div>
       </div>
-    </LanguageSwitcher>
   );
 }
 
