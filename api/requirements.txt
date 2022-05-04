@@ -1,0 +1,17 @@
+zmq==0.0.0
+motor==2.5.1
+lxml==4.7.1
+orjson==3.6.5
+uvicorn==0.16.0
+fastapi==0.70.1
+requests==2.27.1
+google-cloud-logging==2.7.0
+beautifulsoup4==4.10.0
+
+passlib[bcrypt]==1.7.4
+python-jose[cryptography]==3.3.0
+python-multipart==0.0.5
+
+python-dotenv==0.20.0
+sqlalchemy==1.4.36
+PyMySQL==1.0.2

@@ -1,6 +1,7 @@
 import { useTranslation } from "next-export-i18n";
 
 import Link from "next/link";
+import Head from "next/head";
 
 import UMLPreviewer from "../components/umlpreview";
 import Notation from "../components/notation";
@@ -41,39 +42,43 @@ function HomePage() {
   };
 
   return (
-    <div className="bg">
-      <Typography variant={"h1"}>UML Quiz</Typography>
-      <p>
-        <Link href={"/?lang=en"}>English</Link>/
-        <Link href={"/?lang=fr"}>Français</Link>/
-        <Link href={"/?lang=ja"}>日本語</Link>
-      </p>
-      <div className="glass">
-        {t("intro")}
-      </div>
-      <Notation />
-      <div className="glass">
-        <Typography variant={"h2"}>Q1</Typography>
+    <>
+      <Head>
+        <title>UML Quiz</title>
+      </Head>
+      <div className="bg">
+        <Typography variant={"h1"}>UML Quiz</Typography>
         <p>
-          ある会員制のホテルは15部屋保有しています．予約は一人の会員に対して，1回に1部屋だけ受け付けます．適切なクラス図を描きましょう．
+          <Link href={"/?lang=en"}>English</Link>/
+          <Link href={"/?lang=fr"}>Français</Link>/
+          <Link href={"/?lang=ja"}>日本語</Link>
         </p>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              value={value}
-              // placeholder={"Input classdiagram"}
-              multiline
-              fullWidth
-              onChange={handleChangeMarkdown}
-            />
+        <div className="glass">
+          {t("intro")}
+        </div>
+        <Notation />
+        <div className="glass">
+          <Typography variant={"h2"}>Q1</Typography>
+          <p>
+            ある会員制のホテルは15部屋保有しています．予約は一人の会員に対して，1回に1部屋だけ受け付けます．適切なクラス図を描きましょう．
+          </p>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                value={value}
+                multiline
+                fullWidth
+                onChange={handleChangeMarkdown}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <UMLPreviewer value={value} prefix={"classDiagram"} />
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <UMLPreviewer value={value} prefix={"classDiagram"} />
-          </Grid>
-        </Grid>
-        <Button>Submit</Button>
+          <Button>Submit</Button>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 

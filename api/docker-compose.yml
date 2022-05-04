@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  umlquiz-rest-fast:
+    build:
+      context: .
+    environment:
+      WEB_CONCURRENCY: 4
+      REST_PORT: 3456
+    env_file:
+      - ".env"
+    ports:
+      - 3456:3456
