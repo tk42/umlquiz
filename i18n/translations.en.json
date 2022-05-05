@@ -2,5 +2,9 @@
     "intro": "The Unified Modeling Language (UML) is a general-purpose, developmental, modeling language in the field of software engineering that is intended to provide a standard way to visualize the design of a system. umlquiz.com helps to improve your UML writing skill.",
     "notation": "Notation",
     "caption_classdiagram": "Class Diagram",
-    "caption_sequencediagram": "Sequence Diagram"
+    "caption_sequencediagram": "Sequence Diagram",
+    "tutorial": "One membership hotel has 15 rooms. Only one room can be reserved per member at a time. Draw an appropriate class diagram.",
+    "correct_message": "Congratulations🎉 There's no mistake.",
+    "wrong_message": "Too bad😭 The correct answers as follows",
+    "proceed_quiz": "More quiz"
 }

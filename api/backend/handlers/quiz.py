@@ -2,6 +2,7 @@ from fastapi import Form
 from . import session_scope, ReportQuiz
 from diff import diff
 
+# TODO: remove diff. just post id and add this to user history
 def post(
         quiz_id: str,
         language: str,

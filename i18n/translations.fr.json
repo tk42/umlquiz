@@ -2,5 +2,9 @@
     "intro": "Le langage de modélisation unifié (UML) est un langage de modélisation polyvalent et évolutif dans le domaine de l'ingénierie logicielle, destiné à fournir un moyen standard de visualiser la conception d'un système. umlquiz.com vous aide à améliorer vos compétences en matière de rédaction UML.",
     "notation": "Notation",
     "caption_classdiagram": "Diagramme de classe",
-    "caption_sequencediagram": "Diagramme de séquence"
+    "caption_sequencediagram": "Diagramme de séquence",
+    "tutorial": "Un hôtel de membres compte 15 chambres. Une seule chambre peut être réservée par membre à la fois. Dessinez un diagramme de classe approprié.",
+    "correct_message": "Félicitations🎉 Il n'y a pas d'erreur.",
+    "wrong_message": "Too bad😭 Les bonnes réponses sont les suivantes",
+    "proceed_quiz": "Plus de quiz"
 }

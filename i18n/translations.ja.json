@@ -2,5 +2,9 @@
     "intro": "統一モデリング言語（UML）は、ソフトウェアエンジニアリングの分野で、システムの設計を視覚化するための標準的な方法を提供することを目的とした汎用ないし開発用のモデリング言語です。umlquiz.com はUMLデザインスキル向上のお手伝いをします。",
     "notation": "表記",
     "caption_classdiagram": "クラス図",
-    "caption_sequencediagram": "シーケンス図"
+    "caption_sequencediagram": "シーケンス図",
+    "tutorial": "ある会員制のホテルは15部屋保有しています．予約は一人の会員に対して，1回に1部屋だけ受け付けます．適切なクラス図を描きましょう．",
+    "correct_message": "おめでとうございます🎉 間違いは一つも見つかりませんでした",
+    "wrong_message": "残念😭 正答例は下記の通り",
+    "proceed_quiz": "おかわり！"
 }

@@ -1,3 +1,11 @@
+export type FetchQuizProps = {
+    access_token: string
+    language: string
+    quiz_id?: string
+    user_id?: string
+    linkto: string
+}
+
 export type User = {
     user_id: string
     username: string
@@ -16,6 +24,7 @@ export type Quiz = {
     language: string
     diagram_type: string
     level: string
+    title: string
     text: string
     diagram: string
     likes: number
