@@ -35,13 +35,14 @@ def get(
 
 def put(
         user_id: str,
-        user: dict,
+        **kwargs,
     ):
     with session_scope() as s:
-        u = s.query(User).filter(User.user_id==user_id).first()
-        for k, v in user.items():
-            setattr(u, k, v)
-    return user
+        user = s.query(User).filter(User.user_id==user_id).first()
+        for k, v in kwargs.items():
+            if v:
+                setattr(user, k, v)
+        return user.to_dict()
 
 def delete(
         user_id: str,

@@ -8,7 +8,7 @@ import traceback
 from enum import Enum
 import orjson as json
 
-from handlers import token, user, quiz, quiz_by_user, quizs_by_user
+from handlers import token, user, quiz, quiz_by_user, quizs_by_user, reports_by_user
 
 
 created = set()
@@ -52,6 +52,9 @@ async def start_worker(worker_id: str):
             elif _group == "quizs_by_user":
                 assert _method in dir(quizs_by_user), f"Unknown method({_method} in group{_group})"
                 resp = getattr(quizs_by_user, _method)(**_params)
+            elif _group == "reports_by_user":
+                assert _method in dir(reports_by_user), f"Unknown method({_method} in group{_group})"
+                resp = getattr(reports_by_user, _method)(**_params)
             else:
                 raise ValueError(f"Unknown group({_group})")
         except Exception as e:

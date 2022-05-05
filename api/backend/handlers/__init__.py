@@ -80,3 +80,12 @@ class Quiz(Base):
 
     def to_dict(self):
         return {k: v for k, v in self.__dict__.items() if k != "_sa_instance_state"}
+
+
+class ReportQuiz(Base):
+    __tablename__ = "report_quiz"  # テーブル名を指定
+    quiz_id = Column(String(255), primary_key=True)
+    language = Column(String(8), primary_key=True)
+    created_at = Column(Integer, primary_key=True)
+    text = Column(TEXT)
+    diagram = Column(TEXT)

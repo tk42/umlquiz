@@ -1,15 +1,15 @@
 from fastapi import Form
-from . import session_scope, Quiz
+from . import session_scope, ReportQuiz
 from diff import diff
 
 def post(
         quiz_id: str,
         language: str,
-        answer_quiz: dict,
+        answer_diagram: str,
     ):
     with session_scope() as s:
         correct_quiz = s.query(Quiz).filter(Quiz.quiz_id==quiz_id and Quiz.language==language).first()
-        return diff(correct_quiz['diagram'], answer_quiz['diagram'])
+        return diff(correct_quiz.diagram, answer_diagram)
 
 def get(
     ):
@@ -19,10 +19,18 @@ def get(
 
 def put(
         quiz_id: str,
-        quiz: dict,
+        language: str,
+        report_test: str,
+        report_diagram: str,
     ):
+    now = int(time.time())
+    q = ReportQuiz(
+        quiz_id = quiz_id,
+        language = language,
+        text = report_test,
+        diagram = report_diagram,
+        created_at = now,
+    )
     with session_scope() as s:
-        q = s.query(Quiz).filter(Quiz.quiz_id==quiz_id).first()
-        for k, v in quiz.items():
-            setattr(q, k, v)
-    return quiz
+        s.add(q)
+        return q.to_dict()

@@ -5,16 +5,16 @@ from . import session_scope, Quiz
 
 def post(
         user_id: str,
-        quiz: dict,
+        **kwargs,
     ):
     now = int(time.time())
     q = Quiz(
         quiz_id = str(uuid.uuid4()),
-        language = quiz["language"],
-        diagram_type = quiz["diagram_type"],
-        level = quiz["level"],
-        text = quiz["text"],
-        diagram = quiz["diagram"],
+        language = kwargs["language"],
+        diagram_type = kwargs["diagram_type"],
+        level = kwargs["level"],
+        text = kwargs["text"],
+        diagram = kwargs["diagram"],
         likes = 0,
         author_id = user_id,
         created_at = now,
@@ -37,13 +37,14 @@ def get(
 def put(
         user_id: str,
         quiz_id: str,
-        quiz: dict,
+        **kwargs
     ):
     with session_scope() as s:
         q = s.query(Quiz).filter(Quiz.quiz_id==quiz_id and Quiz.author_id==user_id).first()
-        for k, v in quiz.items():
-            setattr(q, k, v)
-    return quiz
+        for k, v in kwargs.items():
+            if v:
+                setattr(q, k, v)
+        return q.to_dict()
 
 
 def delete(
