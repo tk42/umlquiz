@@ -64,10 +64,8 @@ class User(Base):
 class Quiz(Base):
     __tablename__ = "quiz"  # テーブル名を指定
     quiz_id = Column(String(255), primary_key=True)
-    language = Column(String(8), primary_key=True)
     diagram_type = Column(String(16))
     level = Column(String(16))
-    text = Column(TEXT)
     diagram = Column(TEXT)
     likes = Column(Integer)
     author_id = Column(String(255))
@@ -80,6 +78,14 @@ class Quiz(Base):
 
     def to_dict(self):
         return {k: v for k, v in self.__dict__.items() if k != "_sa_instance_state"}
+
+
+class QuizText(Base):
+    __tablename__ = "quiz_text"  # テーブル名を指定
+    quiz_id = Column(String(255), primary_key=True)
+    language = Column(String(8), primary_key=True)
+    title = Column(TEXT)
+    text = Column(TEXT)
 
 
 class ReportQuiz(Base):

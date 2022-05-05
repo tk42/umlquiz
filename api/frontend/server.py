@@ -206,23 +206,28 @@ async def delete_user(
 ##  quiz
 ####
 
-@app.get("/quiz")
+@app.get("/{language}/quiz")
 async def get_quiz(
+        language: str,
         token: str = Depends(oauth2_scheme)
     ):
     socket.send_json(
         {
             "group": "quiz",
             "method": "get",
+            "params": {
+                "language": language
+            }
         }
     )
     return RawResponse(content=socket.recv())
 
 
-@app.post("/quiz/{quiz_id}")
+@app.post("/{language}/quiz/{quiz_id}")
 async def post_quiz(
+        language: str,
         quiz_id: str,
-        language: Optional[str] = Form(None),
+        title: Optional[str] = Form(None),
         text: Optional[str] = Form(None),
         diagram: Optional[str] = Form(None),
         token: str = Depends(oauth2_scheme)
@@ -234,6 +239,7 @@ async def post_quiz(
             "params": {
                 "quiz_id": quiz_id,
                 "language": language,
+                "title": title,
                 "text": text,
                 "diagram": diagram,
             },
@@ -242,11 +248,11 @@ async def post_quiz(
     return RawResponse(content=socket.recv())
 
 
-@app.put("/quiz/{quiz_id}")
+@app.put("/{language}/quiz/{quiz_id}")
 async def put_quiz(
+        language: str,
         quiz_id: str,
-        language: Optional[str] = Form(None),
-        report_test: Optional[str] = Form(None),
+        report_text: Optional[str] = Form(None),
         report_diagram: Optional[str] = Form(None),
         token: str = Depends(oauth2_scheme)
     ):
@@ -256,8 +262,8 @@ async def put_quiz(
             "method": "put",
             "params": {
                 "quiz_id": quiz_id,
-                "langurage": language,
-                "report_test": report_test,
+                "language": language,
+                "report_text": report_text,
                 "report_diagram": report_diagram
             },
         }
@@ -270,8 +276,9 @@ async def put_quiz(
 ####
 
 
-@app.get("/{user_id}/quiz")
+@app.get("/{language}/{user_id}/quiz")
 async def get_quizs_by_user(
+        language: str,
         user_id: str,
         token: str = Depends(oauth2_scheme)
     ):
@@ -280,6 +287,7 @@ async def get_quizs_by_user(
             "group": "quizs_by_user",
             "method": "get",
             "params": {
+                "language": language,
                 "user_id": user_id,
             },
         }
@@ -287,8 +295,9 @@ async def get_quizs_by_user(
     return RawResponse(content=socket.recv())
 
 
-@app.get("/{user_id}/report")
+@app.get("/{language}/{user_id}/report")
 async def get_reports_by_user(
+        language: str,
         user_id: str,
         token: str = Depends(oauth2_scheme)
     ):
@@ -297,6 +306,7 @@ async def get_reports_by_user(
             "group": "reports_by_user",
             "method": "get",
             "params": {
+                "language": language,
                 "user_id": user_id,
             },
         }
@@ -304,9 +314,9 @@ async def get_reports_by_user(
     return RawResponse(content=socket.recv())
 
 
-@app.get("/{user_id}/quiz/{quiz_id}")
+@app.get("/{language}/quiz/{quiz_id}")
 async def get_quiz_by_user(
-        user_id: str,
+        language: str,
         quiz_id: str,
         token: str = Depends(oauth2_scheme)
     ):
@@ -315,7 +325,7 @@ async def get_quiz_by_user(
             "group": "quiz_by_user",
             "method": "get",
             "params": {
-                "user_id": user_id,
+                "language": language,
                 "quiz_id": quiz_id,
             },
         }
@@ -324,11 +334,12 @@ async def get_quiz_by_user(
 
 
 
-@app.post("/{user_id}/quiz")
+@app.post("/{language}/{user_id}/quiz")
 async def post_quiz_by_user(
+        language: str,
         user_id: str,
-        language: Optional[str] = Form(None),
         diagram_type: Optional[DiagramType] = Form(...),
+        title: Optional[str] = Form(None),
         text: Optional[str] = Form(None),
         level: Optional[str] = Form(None),
         diagram: Optional[str] = Form(None),
@@ -342,6 +353,7 @@ async def post_quiz_by_user(
                 "user_id": user_id,
                 "language": language,
                 "diagram_type": diagram_type,
+                "title": title,
                 "text": text,
                 "level": level,
                 "diagram": diagram,
@@ -351,12 +363,13 @@ async def post_quiz_by_user(
     return RawResponse(content=socket.recv())
 
 
-@app.put("/{user_id}/quiz/{quiz_id}")
+@app.put("/{language}/{user_id}/quiz/{quiz_id}")
 async def put_quiz_by_user(
+        language: str,
         user_id: str,
         quiz_id: str,
-        language: Optional[str] = Form(None),
         diagram_type: Optional[DiagramType] = Form(DiagramType.Class),
+        title: Optional[str] = Form(None),
         text: Optional[str] = Form(None),
         level: Optional[str] = Form(None),
         diagram: Optional[str] = Form(None),
@@ -373,6 +386,7 @@ async def put_quiz_by_user(
                 "quiz_id": quiz_id,
                 "language": language,
                 "diagram_type": diagram_type.value,
+                "title": title,
                 "text": text,
                 "level": level,
                 "diagram": diagram,
@@ -383,8 +397,9 @@ async def put_quiz_by_user(
     return RawResponse(content=socket.recv())
 
 
-@app.delete("/{user_id}/quiz/{quiz_id}")
+@app.delete("/{language}/{user_id}/quiz/{quiz_id}")
 async def delete_quiz_by_user(
+        language: str,
         user_id: str,
         quiz_id: str,
         token: str = Depends(oauth2_scheme)
@@ -394,6 +409,7 @@ async def delete_quiz_by_user(
             "group": "quiz_by_user",
             "method": "delete",
             "params": {
+                "language": language,
                 "user_id": user_id,
                 "quiz_id": quiz_id,
             },

@@ -12,22 +12,23 @@ def post(
         return diff(correct_quiz.diagram, answer_diagram)
 
 def get(
+        language: str,
     ):
     with session_scope() as s:
         quizs = s.query(Quiz).all()
-        return [quiz.to_dict() for quiz in quizs]
+        return [quiz.to_dict() for quiz in quizs if quiz['language'] == language]
 
 def put(
         quiz_id: str,
         language: str,
-        report_test: str,
+        report_text: str,
         report_diagram: str,
     ):
     now = int(time.time())
     q = ReportQuiz(
         quiz_id = quiz_id,
         language = language,
-        text = report_test,
+        text = report_text,
         diagram = report_diagram,
         created_at = now,
     )
