@@ -3,7 +3,7 @@
     "notation": "Notation",
     "caption_classdiagram": "Class Diagram",
     "caption_sequencediagram": "Sequence Diagram",
-    "tutorial": "One membership hotel has 15 rooms. Only one room can be reserved per member at a time. Draw an appropriate class diagram.",
+    "tutorial": "Animal class has age (+int) and gender (+string), with operations to get isMammal (mammal or not:+), mate (mate or not:+). The child classe of Animal includes Duck, Fish and Zebra. Ducks have beakColour (beak colour:+string) as an attribute and can swim (swim:+) and quack (quack:+). Fish have an attribute sizeInFeet (length:-int) that can be referenced internally and can be checked if it canEat (edible:-). A zebra has an attribute is_wild (wild or not:+bool) and can run (run:+). Draw an appropriate class diagram.",
     "correct_message": "Congratulations🎉 There's no mistake.",
     "wrong_message": "Too bad😭 The correct answers as follows",
     "proceed_quiz": "More quiz"

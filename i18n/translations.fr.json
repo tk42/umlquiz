@@ -3,7 +3,7 @@
     "notation": "Notation",
     "caption_classdiagram": "Diagramme de classe",
     "caption_sequencediagram": "Diagramme de séquence",
-    "tutorial": "Un hôtel de membres compte 15 chambres. Une seule chambre peut être réservée par membre à la fois. Dessinez un diagramme de classe approprié.",
+    "tutorial": "La classe Animal a age (l'âge:+int) et gender (le sexe:+string), avec des opérations pour obtenir isMammal (mammifère ou pas:+), mate (mate ou pas:+). La classe enfant de Animal comprend Canard, Poisson et Zèbre. Les canards ont pour attribut beakColour (couleur du bec:+chaîne) et swim (peuvent nager:+) et quack (faire coin-coin:+). Les poissons ont un attribut sizeInFeet (longueur:-int) qui peut être référencé en interne et dont on peut vérifier s'il canEat (comestible:-). Un zèbre a un attribut is_wild (sauvage ou non:+bool) et run (peut courir:+). Dessinez un diagramme de classes approprié.",
     "correct_message": "Félicitations🎉 Il n'y a pas d'erreur.",
     "wrong_message": "Too bad😭 Les bonnes réponses sont les suivantes",
     "proceed_quiz": "Plus de quiz"
