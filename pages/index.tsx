@@ -1,5 +1,5 @@
 import { useTranslation } from "next-export-i18n";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Head from "next/head";
 
@@ -10,18 +10,17 @@ import { Typography } from "@mui/material";
 
 function HomePage() {
   const { t } = useTranslation();
-  const [accessToken, setAccessToken] = useState('');
+  const [accessToken, setAccessToken] = useState("");
 
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await fetch('/api/placeholder')
-      const data = await response.json()
-      setData(data)
-    }
-    fetchUsers()
-  },[])
-
+      const response = await fetch("/api/placeholder");
+      const data = await response.json();
+      setData(data);
+    };
+    fetchUsers();
+  }, []);
 
   return (
     <>
@@ -35,9 +34,7 @@ function HomePage() {
           <Link href={"/?lang=fr"}>Français</Link>/
           <Link href={"/?lang=ja"}>日本語</Link>
         </p>
-        <div className="glass">
-          {t("intro")}
-        </div>
+        <div className="glass">{t("intro")}</div>
         <Notation />
         <Quiz caption={"Q1"} user_id={"test"} token={accessToken} />
       </div>
