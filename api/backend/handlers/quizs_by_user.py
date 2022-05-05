@@ -6,5 +6,5 @@ def get(
         user_id: str
     ):
     with session_scope() as s:
-        quizs = s.query(User).filter(User.user_id==user_id).all()
+        quizs = s.query(Quiz).filter(Quiz.author_id==user_id).all()
         return [quiz.to_dict() for quiz in quizs]

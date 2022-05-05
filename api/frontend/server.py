@@ -70,17 +70,17 @@ QuizStatus = Enum(
 
 # UUID = quiz_id + language
 class Quiz(BaseModel):
-    quiz_id: str
+    quiz_id: Optional[str]
     language: str
     diagram_type: DiagramType
     level: str
     text: str
     diagram: str
-    likes: int
-    author_id: str
-    created_at: int
-    updated_at: int
-    status: QuizStatus
+    likes: Optional[int]
+    author_id: Optional[str]
+    created_at: Optional[int]
+    updated_at: Optional[int]
+    status: Optional[QuizStatus]
 
 
 class User(BaseModel):
@@ -105,26 +105,26 @@ socket.connect("tcp://localhost:5556")
 ####
 from fastapi.param_functions import Depends
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
-from .oauth2 import create_access_token
 
 @app.post('/token')
 def get_token(request: OAuth2PasswordRequestForm = Depends()):
-    if request.username != AUTH_USERNAME or request.password != AUTH_PASSWORD:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail='Failed Authentication'
-        )
-    access_token = create_access_token(data={'sub': AUTH_USERNAME})
-    return {
-        'access_token': access_token,
-        'token_type': 'bearer',
-    }
+    socket.send_json(
+        {
+            "group": "token",
+            "method": "get",
+            "params": {
+                "username": request.username,
+                "password": request.password,
+            },
+        }
+    )
+    return RawResponse(content=socket.recv())
 
 ####
 ##  User
 ####
 
-@app.post("/user")
+@app.post("/user", response_model=User)
 async def post_user(
         username: str = Form(...),
         password: str = Form(...),
