@@ -1,5 +1,5 @@
 import { useTranslation } from "next-export-i18n";
-
+import { useState, useEffect } from 'react';
 import Link from "next/link";
 import Head from "next/head";
 
@@ -8,11 +8,20 @@ import Quiz from "../components/quiz";
 import { getToken } from "../components/token";
 import { Typography } from "@mui/material";
 
-
-async function HomePage() {
+function HomePage() {
   const { t } = useTranslation();
+  const [accessToken, setAccessToken] = useState('');
 
-  const access_token: string = await getToken();
+  const [data, setData] = useState([])
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await fetch('/api/placeholder')
+      const data = await response.json()
+      setData(data)
+    }
+    fetchUsers()
+  },[])
+
 
   return (
     <>
@@ -30,7 +39,7 @@ async function HomePage() {
           {t("intro")}
         </div>
         <Notation />
-        <Quiz caption={"Q1"} token={access_token} />
+        <Quiz caption={"Q1"} user_id={"test"} token={accessToken} />
       </div>
     </>
   );

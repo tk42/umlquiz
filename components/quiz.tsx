@@ -1,8 +1,8 @@
 import { Typography, Grid, Button } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import UMLPreviewer from "./umlpreview";
-import {useState} from 'react';
-import { API_URL, ENDPOINT_TOKEN } from './const';
+import {useState, useEffect} from 'react';
+import { API_URL, ENDPOINT_QUIZ } from './const';
 
 const mdMermaid = `Animal <|-- Duck
 Animal <|-- Fish
@@ -25,9 +25,15 @@ class Zebra{
     +run()
 }`;
 
-
-export default function Quiz({caption, token} : {caption: string, token: string}) {
-    // fetch(API_URL+)
+export default function Quiz({caption, user_id, token} : {caption: string, user_id: string, token: string}) {
+    const [data, setData] = useState();    
+    useEffect(()=>{
+        fetch(API_URL+"/"+user_id+ENDPOINT_QUIZ).then((resp)=>{
+            return resp.json()
+        }).then((json)=>{
+            setData(json)
+        })
+    })
 
     const [value, setValue] = useState(mdMermaid);
 
