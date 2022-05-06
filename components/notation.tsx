@@ -3,6 +3,12 @@ import { Typography, Grid } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import UMLPreviewer from "./umlpreview";
 
+const notation_annotations = `class Interface
+<<interface>> Interface
+class Abstract
+<<abstract>> Abstract
+class Enum
+<<enum>> Enum`
 
 const notation_visibility = `class Visibility
 Visibility : +int public_member
@@ -30,6 +36,18 @@ export default function Notation() {
         <Typography variant={"h2"}>{t("notation")}</Typography>
         <Typography variant={"h3"}>{t("caption_classdiagram")}</Typography>
         <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <TextField
+              label="Annotations"
+              multiline
+              rows={6}
+              fullWidth
+              defaultValue={notation_annotations}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <UMLPreviewer value={notation_annotations} prefix={"classDiagram"} />
+          </Grid>
           <Grid item xs={6}>
             <TextField
               label="Visibility"

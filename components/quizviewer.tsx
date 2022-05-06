@@ -61,7 +61,7 @@ export default function QuizViewer({
           <UMLPreviewer value={markdown} prefix={diagram_type} />
         </Grid>
       </Grid>
-      <Button onClick={()=>setOpen(true)}>✓ CHECK</Button>
+      <Button onClick={()=>setOpen(true)} startIcon={"✓"}>CHECK</Button>
       <Modal
         open={open}
         onClose={(e) => setOpen(false)}
