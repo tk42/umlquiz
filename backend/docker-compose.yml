@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  backend:
+    build:
+      context: .
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASS: e8a48653851e28c69d0506508fb27fc5
+      DB_NAME: umlquiz
+    ports:
+      - 8080:8080
+
+  db:
+    image: 'postgres:latest'
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=e8a48653851e28c69d0506508fb27fc5
+    ports:
+      - 5432:5432
+    volumes:
+      - "./postgres-data:/var/lib/postgresql/data"
+
+  pgweb:
+    image: 'sosedoff/pgweb:latest'
+    environment:
+      DATABASE_URL: postgres://postgres:e8a48653851e28c69d0506508fb27fc5@db:5432/umlquiz?sslmode=disable
+    depends_on:
+      - db
+    ports:
+      - 8081:8081

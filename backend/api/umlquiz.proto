@@ -1,0 +1,229 @@
+syntax = "proto3";
+
+package umlquiz;
+
+option go_package = "github.com/tk42/umlquiz;umlquiz";
+
+import "google/type/datetime.proto";
+
+enum DiagramType {
+    UNSPECIFIED = 0;
+    CLASS = 1;
+    SEQUENCE = 2;
+}
+
+enum MemgerShip {
+    BRONZE = 0;
+    SILVER = 1;
+    GOLD = 2;
+}
+
+enum QuizStatus {
+    DRAFT = 0;
+    REVIEW = 1;
+    PUBLIC = 2;
+    REPORT = 3;
+}
+
+message User {
+    string user_id = 1;
+    string username = 2;
+    string password = 3;
+    string email = 4;
+    string profile = 5;
+    MemgerShip membership = 6;
+    repeated string liked_quiz_ids = 7;
+    repeated string quiz_history = 8;
+    google.type.DateTime created_at = 9;
+    google.type.DateTime updated_at = 10;
+}
+
+message Quiz {
+    string quiz_id = 1;
+    string language = 2;
+    QuizStatus status = 3;
+    DiagramType diagram_type = 4;
+    string level = 5;
+    string title = 6;
+    string text = 7;
+    string diagram = 8;
+    int32 likes = 9;
+    string author_id = 10;
+    google.type.DateTime created_at = 11;
+    google.type.DateTime updated_at = 12;
+}
+
+message Report {
+	string report_id = 1;
+    string quiz_id = 2;
+    string language = 3;
+    string author_id = 4;
+    string title = 5;
+    string text = 6;
+    string diagram = 7;
+    string comment = 8;
+    google.type.DateTime created_at = 9;
+}
+
+message AddUserRequest {
+    string username = 1;
+    string password = 2;
+    string email = 3;
+}
+
+message UpdateUserRequest {
+    string user_id = 1;
+    string username = 2;
+    string password = 3;
+    string email = 4;
+    string profile = 5;
+    MemgerShip membership = 6;
+}
+
+message UserRequest {
+    string user_id = 1;
+}
+
+message AddQuizRequest {
+    string language = 1;
+    DiagramType diagram_type = 2;
+    string level = 3;
+    string title = 4;
+    string text = 5;
+    string diagram = 6;
+    string author_id = 7;
+}
+
+message FindQuizRequest {
+    string quiz_id = 1;
+    string language = 2;
+}
+
+message UpdateQuizRequest {
+    string quiz_id = 1;
+    string language = 2;
+    QuizStatus status = 3;
+    DiagramType diagram_type = 4;
+    string level = 5;
+    string title = 6;
+    string text = 7;
+    string diagram = 8;
+    int32 likes = 9;
+}
+
+message DeleteQuizRequest {
+    string quiz_id = 1;
+    string language = 2;
+}
+
+message ListQuizzesAllRequest {
+    string language = 1;
+    QuizStatus status = 2;
+}
+
+message ListQuizzesByUserRequest {
+    string user_id = 1;
+    string language = 2;
+    QuizStatus status = 3;
+}
+
+message SolveQuizRequest {
+    string user_id = 1;
+    string quiz_id = 2;
+    string language = 3;
+    string diagram = 4;
+}
+
+message LikeQuizRequest {
+    string user_id = 1;
+    string quiz_id = 2;
+    string language = 3;
+    int32 diff_like = 4;
+}
+
+
+message AddReportRequest {
+    string user_id = 1;
+    string quiz_id = 2;
+    string language = 3;
+    string title = 4;
+    string text = 5;
+    string diagram = 6;
+    string comment = 7;
+}
+
+message FindReportsRequest {
+    string quiz_id = 1;
+    string language = 2;
+}
+
+message UpdateReportRequest {
+    string report_id = 1;
+    string title = 2;
+    string text = 3;
+    string diagram = 4;
+    string comment = 5;
+}
+
+message DeleteReportRequest {
+    string report_id = 1;
+}
+
+
+
+message UserResponse {
+  User user = 1;
+  string error = 2;
+}
+
+message QuizResponse {
+    Quiz quiz = 1;
+    string error = 2;
+}
+
+message ReportResponse {
+    Report report = 1;
+    string error = 2;
+}
+
+message QuizzesResponse {
+    repeated Quiz quiz = 1;
+    string error = 2;
+}
+
+message ReportsResponse {
+    repeated Report report = 1;
+    string error = 2;
+}
+
+message SolveResponse {
+    string diff = 1;
+    string error = 2;
+}
+
+message ErrorResponse {
+    string error = 1;
+}
+
+
+
+service UMLQuizService {
+    rpc AddUser(AddUserRequest) returns (UserResponse) {}
+    rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {}
+    rpc FindUser(UserRequest) returns (UserResponse) {}
+    rpc DeleteUser(UserRequest) returns (ErrorResponse) {}
+
+    rpc AddQuiz(AddQuizRequest) returns (QuizResponse) {}
+    rpc FindQuiz(FindQuizRequest) returns (QuizResponse) {}
+    rpc UpdateQuiz(UpdateQuizRequest) returns (QuizResponse) {}
+    rpc DeleteQuiz(DeleteQuizRequest) returns (ErrorResponse) {}
+    rpc ListQuizzesAll(ListQuizzesAllRequest) returns (QuizzesResponse) {}
+    rpc ListQuizzesByUser(ListQuizzesByUserRequest) returns (QuizzesResponse) {}
+    rpc SolveQuiz(SolveQuizRequest) returns (SolveResponse) {}
+    rpc LikeQuiz(LikeQuizRequest) returns (ErrorResponse) {}
+
+    rpc AddReport(AddReportRequest) returns (ReportResponse) {}
+    rpc FindReports(FindReportsRequest) returns (ReportsResponse) {}
+    rpc UpdateReport(UpdateReportRequest) returns (ReportResponse) {}
+    rpc DeleteReport(DeleteReportRequest) returns (ErrorResponse) {}
+}

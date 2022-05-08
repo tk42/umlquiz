@@ -23,6 +23,7 @@ classDiagram
     Injector..>Presentation
     Injector..>UserRepository
     Injector..>QuizRepository
+    Injector..>ReportRepository
     Injector..>UserUsecase
     Injector..>QuizUsecase
 
@@ -34,16 +35,21 @@ classDiagram
         +AddUser(username, password, email) (User, error)
         +UpdateUser(user_id, username, password, email, profile, membership) (User, error)
         +FindUser(user_id) (User, error)
-        +DeleteUser(user_id)
-        +AddQuiz(language, diagram_type, level, title, text, diagram, author_id) (Quiz, error)
-        +FindQuizByUser(user_id, quiz_id, language, status) (Quiz, error)
+        +DeleteUser(user_id) (error)
+
+        +AddQuiz(language, status, diagram_type, level, title, text, diagram, author_id) (Quiz, error)
+        +FindQuiz(quiz_id, language) (Quiz, error)
         +UpdateQuiz(quiz_id, language, status, diagram_type, level, title, text, diagram) (Quiz, error)
         +DeleteQuiz(quiz_id, language) (error)
         +ListQuizzesAll(language, status) ([]Quiz, error)
         +ListQuizzesByUser(user_id, language, status) ([]Quiz, error)
-        +SolveQuiz(user_id, language, status, diagram) (string, error)
-        +ReportQuiz(user_id, language, text, diagram) (error)
-        +LikeQuiz(user_id, language, status) (error)
+        +SolveQuiz(user_id, quiz_id, language, diagram) (string, error)
+        +LikeQuiz(user_id, quiz_id, language) (error)
+
+        +AddReport(user_id, quiz_id, language, title, text, diagram, comment) (Report, error)
+        +FindReports(quiz_id, language) ([]Report, error)
+        +UpdateReport(report_id, title, text, diagram, comment) (Report, error)
+        +DeleteReport(report_id) (error)
     }
     Presentation..>IUserUsecase
     Presentation..>IQuizUsecase
@@ -68,12 +74,22 @@ classDiagram
     class QuizRepository {
         SqlHandler
         +NewQuizRepository(SqlHandler)
-        Create(language, diagram_type, level, title, text, diagram, author_id) (Quiz, error)
+        Create(language, status, diagram_type, level, title, text, diagram, likes, author_id) (Quiz, error)
         Update(quiz_id, language, status, diagram_type, level, title, text, diagram, likes) (Quiz, error)
-        Find(user_id, language, status) (Quiz, error)
-        Delete(user_id, language, status) (error)
+        UpdateLike(quiz_id, language, diff_like) (error)
+        Find(quiz_id, language) (Quiz, error)
+        Delete(quiz_id, language) (error)
     }
     QuizRepository..|>SqlHandler
+    class ReportRepository {
+        SqlHandler
+        +NewReportRepository(SqlHandler)
+        Create(quiz_id, language, author_id, title, text, diagramm comment) (Report, error)
+        Update(report_id, title, text, diagram, comment) (Report, error)
+        Find(quiz_id, language) ([]Report, error)
+        Delete(report_id) (error)
+    }
+    ReportRepository..|>SqlHandler
 
 
     QuizUsecase..|>IQuizUsecase
@@ -97,40 +113,50 @@ classDiagram
     class QuizUsecase {
         UserRepository
         QuizRepository
-        +NewQuizUsecase(UserRepository, QuizRepository)
-        +AddQuiz(language, diagram_type, level, title, text, diagram, author_id) (quiz_id, error)
-        +FindQuizByUser(user_id, quiz_id, language, status) (Quiz, error)
+        ReportRepository
+        +NewQuizUsecase(UserRepository, QuizRepository, ReportRepository)
+        +AddQuiz(language, status, diagram_type, level, title, text, diagram, author_id) (Quiz, error)
+        +FindQuiz(quiz_id, language, status) (Quiz, error)
         +UpdateQuiz(quiz_id, language, status, diagram_type, level, title, text, diagram) (Quiz, error)
         +DeleteQuiz(quiz_id, language) (error)
         +ListQuizzesAll(language, status) ([]Quiz, error)
         +ListQuizzesByUser(user_id, language, status) ([]Quiz, error)
-        +SolveQuiz(user_id, language, status, diagram) (string, error)
-        +ReportQuiz(user_id, language, text, diagram) (error)
+        +SolveQuiz(user_id, quiz_id, language, diagram) (string, error)
+        +LikeQuiz(user_id, quiz_id, language, int) (error)
+        +AddReport(user_id, quiz_id, language, title, text, diagram, comment) (Report, error)
+        +FindReports(quiz_id, language) ([]Report, error)
+        +UpdateReport(report_id, title, text, diagram, comment) (Report, error)
+        +DeleteReport(report_id) (error)
     }
     QuizUsecase..>IQuizRepository
     QuizUsecase..>IUserRepository
+    QuizUsecase..>IReportRepository
     class IQuizUsecase {
         <<interface>>
-        +AddQuiz(language, diagram_type, level, title, text, diagram, likes, author_id) (quiz_id, error)
-        +FindQuizByUser(user_id, quiz_id, language, status) (Quiz, error)
+        +AddQuiz(language, diagram_type, level, title, text, diagram, author_id) (Quiz, error)
+        +FindQuizz(quiz_id, language) (Quiz, error)
         +UpdateQuiz(quiz_id, language, status, diagram_type, level, title, text, diagram) (Quiz, error)
         +DeleteQuiz(quiz_id, language) (error)
         +ListQuizzesAll(language, status) ([]Quiz, error)
         +ListQuizzesByUser(user_id, language, status) ([]Quiz, error)
-        +SolveQuiz(user_id, language, status, diagram) (string, error)
-        +ReportQuiz(user_id, language, text, diagram) (error)
+        +SolveQuiz(user_id, quiz_id, language, diagram) (string, error)
+        +LikeQuiz(user_id, quiz_id, language, int) (error)
+        +AddReport(user_id, quiz_id, language, title, text, diagram, comment) (Report, error)
+        +FindReports(quiz_id, language) ([]Report, error)
+        +UpdateReport(report_id, title, text, diagram, comment) (Report, error)
+        +DeleteReport(report_id) (error)
     }
 
 
     class IUserRepository {
         <<interface>>
-        Create(username, password, email, created_at) (User, error)
+        Create(username, password, email) (User, error)
         Update(user_id, username, password, email, profile, membership, updated_at) (User, error)
         Find(user_id) (User, error)
         Delete(user_id) (error)
     }
     class User {
-        +user_id: string (*)
+        +user_id: string [*]
         +username: string
         +password: string
         +email: string
@@ -144,15 +170,16 @@ classDiagram
     IUserRepository..>User
     class IQuizRepository {
         <<interface>>
-        Create(language, diagram_type, level, title, text, diagram, likes, author_id, created_at) (Quiz, error)
-        Update(quiz_id, language, status, diagram_type, level, title, text, diagram, likes, updated_at) (Quiz, error)
-        Find(user_id, language, status) (Quiz, error)
-        Delete(user_id, language, status) (error)
+        Create(language, diagram_type, level, title, text, diagram, likes, author_id) (Quiz, error)
+        Update(quiz_id, language, status, diagram_type, level, title, text, diagram, likes) (Quiz, error)
+        UpdateLike(quiz_id, language, diff_likt) (error)
+        Find(quiz_id, language) (Quiz, error)
+        Delete(quiz_id, language) (error)
     }
     class Quiz {
-        +quiz_id: string (*)
-        +language: string (*)
-        +status: QuizStatus (*)
+        +quiz_id: string [*]
+        +language: string [*]
+        +status: QuizStatus
         +diagram_type: DiagramType
         +level: string
         +title: string
@@ -165,6 +192,26 @@ classDiagram
     }
     IQuizRepository..>Quiz
     IQuizRepository..|>QuizRepository
+    class Report {
+        +report_id: string [*]
+        +quiz_id: string
+        +language: string
+        +author_id: string
+        +title: string
+        +text: string
+        +diagram: string
+        +comment: string
+        +created_at: number
+    }
+    class IReportRepository {
+        <<interface>>
+        Create(quiz_id, language, author_id, title, text, diagram, comment) (Report, error)
+        Update(report_id, title, text, diagram, comment) (Report, error)
+        Find(quiz_id, language) ([]Report, error)
+        Delete(report_id) (error)
+    }
+    IReportRepository..>Report
+    IReportRepository..|>ReportRepository
     class Membership {
         <<enum>>
         Bronze
@@ -185,4 +232,5 @@ classDiagram
         Report
     }
     Quiz..>QuizStatus
+    Quiz..>DiagramType
 ```
