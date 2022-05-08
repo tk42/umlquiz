@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/google/uuid v1.1.2
+	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0
 	github.com/kylelemons/godebug v1.1.0
 	github.com/lib/pq v1.10.5
 	github.com/tk42/victolinux v0.0.0-20211119083550-c0d1732b0e66
