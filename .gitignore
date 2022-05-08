@@ -36,3 +36,6 @@ yarn-error.log*
 
 # secrets
 **/.env
+
+# postgres
+backend/postgres-data

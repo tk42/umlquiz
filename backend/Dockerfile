@@ -1,8 +1,32 @@
-FROM golang:latest
-ENV TZ=Asia/Tokyo
+###############################
+# Full Builder container
+###############################
+FROM golang:alpine AS compiler
 
-WORKDIR /workspace
-COPY . /workspace/
-RUN go build .
-RUN chmod +x main
-CMD ./main
+WORKDIR /go/src/app
+
+ENV GO111MODULE=on
+ENV GOPROXY=direct
+
+RUN apk add git openssl openssh gcc musl-dev
+
+COPY go.mod .
+COPY go.sum .
+
+RUN go mod download
+
+COPY . .
+
+# Compile
+RUN CGO_ENABLED=1 GOOS=linux go build -a -installsuffix cgo -o app .
+
+###############################
+# Exec container
+###############################
+FROM alpine:latest
+
+ENV TZ=Asia/Tokyo
+WORKDIR /home
+COPY --from=compiler /go/src/app /home
+
+CMD ["/home/app"]
