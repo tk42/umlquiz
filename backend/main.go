@@ -34,9 +34,8 @@ func authenticate(ctx context.Context) (context.Context, error) {
 
 func main() {
 	logger := logging.GetLogger("umlquiz", logging.LogLevel(zapcore.DebugLevel))
-	logger.Info("sever start")
+	logger.Info("sever start", zap.String("address", ADDRESS))
 
-	logger.Info("starting to listen", zap.String("address", ADDRESS))
 	listener, err := net.Listen("tcp", ADDRESS)
 	if err != nil {
 		panic(err)
@@ -49,6 +48,7 @@ func main() {
 	presentation := utility.InjectPresentation()
 	umlquiz.RegisterUMLQuizServiceServer(server, &presentation)
 
+	logger.Info("starting to listen")
 	if err := server.Serve(listener); err != nil {
 		logger.Fatal("failed to serve", zap.Error(err))
 	}
