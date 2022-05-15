@@ -1,13 +1,22 @@
-package utility
+package main
 
 import (
+	"embed"
+
 	"github.com/tk42/umlquiz/backend/adapter"
 	"github.com/tk42/umlquiz/backend/application"
 	"github.com/tk42/umlquiz/backend/infra"
 )
 
+//go:embed api/*_*.sql
+var embedMigrations embed.FS
+
 func InjectDB() infra.SqlHandler {
-	return infra.NewSqlHandler()
+	sqlHandler := infra.NewSqlHandler()
+	if err := sqlHandler.Migrate(embedMigrations); err != nil {
+		panic(err)
+	}
+	return sqlHandler
 }
 
 func InjectUserRepository() infra.UserRepository {

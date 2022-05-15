@@ -5,13 +5,15 @@ services:
     build:
       context: .
     environment:
-      DB_HOST: db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASS: e8a48653851e28c69d0506508fb27fc5
-      DB_NAME: umlquiz
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASS=e8a48653851e28c69d0506508fb27fc5
+      - DB_NAME=umlquiz
     ports:
       - 8080:8080
+    depends_on:
+      - db
 
   db:
     image: 'postgres:latest'
@@ -19,6 +21,7 @@ services:
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=e8a48653851e28c69d0506508fb27fc5
+      - POSTGRES_DB=umlquiz
     ports:
       - 5432:5432
     volumes:
@@ -27,20 +30,20 @@ services:
   pgweb:
     image: 'sosedoff/pgweb:latest'
     environment:
-      DATABASE_URL: postgres://postgres:e8a48653851e28c69d0506508fb27fc5@db:5432/umlquiz?sslmode=disable
+      - DATABASE_URL=postgres://postgres:e8a48653851e28c69d0506508fb27fc5@db:5432/umlquiz?sslmode=disable
     depends_on:
       - db
     ports:
       - 8081:8081
 
   client:
-    image: wongnai/grpcui
+    image: ghcr.io/tk42/grpcui
     environment: 
       - GRPCUI_SERVER=backend:8080
-    ports:
-      - 8888:8080
+      - GRPCUI_WAIT=5
     volumes:
       - .:/home
-    command: ["sh", "-c", "sleep 5;", "/usr/local/scripts/start.sh"]
+    ports:
+      - 8888:8080
     depends_on: 
       - backend

@@ -8,7 +8,7 @@ import (
 	autogen "github.com/tk42/umlquiz/backend/gen/proto/golang/github.com/tk42/umlquiz"
 	"github.com/tk42/umlquiz/backend/gen/sqlc"
 	"github.com/tk42/umlquiz/backend/infra"
-	datetime "google.golang.org/genproto/googleapis/type/datetime"
+	"github.com/tk42/umlquiz/backend/utility"
 )
 
 type UserUsecase struct {
@@ -75,8 +75,8 @@ func (u *QuizUsecase) ListQuizzesAll(ctx context.Context, req *autogen.ListQuizz
 			Diagram:     quiz.Diagram.String,
 			Likes:       quiz.Likes.Int32,
 			AuthorId:    quiz.AuthorID.String,
-			CreatedAt:   quiz.CreatedAt.(*datetime.DateTime),
-			UpdatedAt:   quiz.UpdatedAt.(*datetime.DateTime),
+			CreatedAt:   utility.ToDatetime(quiz.CreatedAt),
+			UpdatedAt:   utility.ToDatetime(quiz.UpdatedAt),
 		})
 	}
 	return result, err
@@ -97,8 +97,8 @@ func (u *QuizUsecase) ListQuizzesByUser(ctx context.Context, req *autogen.ListQu
 				Diagram:     quiz.Diagram.String,
 				Likes:       quiz.Likes.Int32,
 				AuthorId:    quiz.AuthorID.String,
-				CreatedAt:   quiz.CreatedAt.(*datetime.DateTime),
-				UpdatedAt:   quiz.UpdatedAt.(*datetime.DateTime),
+				CreatedAt:   utility.ToDatetime(quiz.CreatedAt),
+				UpdatedAt:   utility.ToDatetime(quiz.UpdatedAt),
 			},
 		)
 	}

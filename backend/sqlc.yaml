@@ -3,7 +3,7 @@ packages:
   - path: "gen/sqlc"
     name: "sqlc"
     engine: "postgresql"
-    schema: "api/schema.sql"
+    schema: "api/0001_create_schema.sql"
     queries: "api/query.sql"
 
     emit_json_tags: true

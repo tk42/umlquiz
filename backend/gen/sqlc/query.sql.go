@@ -8,6 +8,7 @@ package sqlc
 import (
 	"context"
 	"database/sql"
+	"time"
 )
 
 const addQuiz = `-- name: AddQuiz :one
@@ -28,8 +29,8 @@ type AddQuizParams struct {
 	Text        sql.NullString `json:"text"`
 	Diagram     sql.NullString `json:"diagram"`
 	AuthorID    sql.NullString `json:"author_id"`
-	CreatedAt   interface{}    `json:"created_at"`
-	UpdatedAt   interface{}    `json:"updated_at"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
 }
 
 func (q *Queries) AddQuiz(ctx context.Context, arg AddQuizParams) (Quiz, error) {
@@ -81,7 +82,7 @@ type AddReportParams struct {
 	Text      sql.NullString `json:"text"`
 	Diagram   sql.NullString `json:"diagram"`
 	Comment   sql.NullString `json:"comment"`
-	CreatedAt interface{}    `json:"created_at"`
+	CreatedAt time.Time      `json:"created_at"`
 }
 
 func (q *Queries) AddReport(ctx context.Context, arg AddReportParams) (Report, error) {
@@ -121,12 +122,12 @@ RETURNING user_id, username, password, email, profile, created_at, updated_at, m
 `
 
 type AddUserParams struct {
-	UserID    string      `json:"user_id"`
-	Username  string      `json:"username"`
-	Password  string      `json:"password"`
-	Email     string      `json:"email"`
-	CreatedAt interface{} `json:"created_at"`
-	UpdatedAt interface{} `json:"updated_at"`
+	UserID    string    `json:"user_id"`
+	Username  string    `json:"username"`
+	Password  string    `json:"password"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 func (q *Queries) AddUser(ctx context.Context, arg AddUserParams) (User, error) {
@@ -395,7 +396,7 @@ type UpdateQuizParams struct {
 	Text        sql.NullString `json:"text"`
 	Diagram     sql.NullString `json:"diagram"`
 	Likes       sql.NullInt32  `json:"likes"`
-	UpdatedAt   interface{}    `json:"updated_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
 }
 
 func (q *Queries) UpdateQuiz(ctx context.Context, arg UpdateQuizParams) (Quiz, error) {
@@ -440,7 +441,7 @@ type UpdateQuizIDParams struct {
 	QuizID    string         `json:"quiz_id"`
 	Language  string         `json:"language"`
 	Title     sql.NullString `json:"title"`
-	CreatedAt interface{}    `json:"created_at"`
+	CreatedAt time.Time      `json:"created_at"`
 }
 
 func (q *Queries) UpdateQuizID(ctx context.Context, arg UpdateQuizIDParams) (Quiz, error) {
@@ -538,7 +539,7 @@ type UpdateUserParams struct {
 	Email      string         `json:"email"`
 	Profile    sql.NullString `json:"profile"`
 	Membership sql.NullInt32  `json:"membership"`
-	UpdatedAt  interface{}    `json:"updated_at"`
+	UpdatedAt  time.Time      `json:"updated_at"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {

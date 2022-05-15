@@ -11,7 +11,7 @@ import (
 	"github.com/tk42/umlquiz/backend/domain"
 	autogen "github.com/tk42/umlquiz/backend/gen/proto/golang/github.com/tk42/umlquiz"
 	"github.com/tk42/umlquiz/backend/gen/sqlc"
-	datetime "google.golang.org/genproto/googleapis/type/datetime"
+	"github.com/tk42/umlquiz/backend/utility"
 )
 
 type UserRepository struct {
@@ -20,7 +20,19 @@ type UserRepository struct {
 }
 
 func (r *UserRepository) Create(ctx context.Context, req *autogen.AddUserRequest) (*autogen.User, error) {
-	user, err := r.SqlHandler.Queries.AddUser(ctx, sqlc.AddUserParams{uuid.New().String(), req.GetUsername(), req.GetPassword(), req.GetEmail(), time.Now(), time.Now()})
+	user, err := r.SqlHandler.Queries.AddUser(ctx,
+		sqlc.AddUserParams{
+			UserID:    uuid.New().String(),
+			Username:  req.GetUsername(),
+			Password:  req.GetPassword(),
+			Email:     req.GetEmail(),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+	)
+	if err != nil {
+		return nil, err
+	}
 	var m autogen.MemgerShip
 	user.Membership.Scan(&m)
 	return &autogen.User{
@@ -29,15 +41,18 @@ func (r *UserRepository) Create(ctx context.Context, req *autogen.AddUserRequest
 		Password:     user.Password,
 		Email:        user.Email,
 		Profile:      user.Profile.String,
-		CreatedAt:    user.CreatedAt.(*datetime.DateTime),
-		UpdatedAt:    user.UpdatedAt.(*datetime.DateTime),
+		CreatedAt:    utility.ToDatetime(user.CreatedAt),
+		UpdatedAt:    utility.ToDatetime(user.UpdatedAt),
 		Membership:   m,
 		LikedQuizIds: strings.Split(user.LikedQuizIds.String, ","),
 		QuizHistory:  strings.Split(user.QuizHistory.String, ","),
-	}, err
+	}, nil
 }
 func (r *UserRepository) Update(ctx context.Context, req *autogen.UpdateUserRequest) (*autogen.User, error) {
-	user, err := r.SqlHandler.Queries.UpdateUser(ctx, sqlc.UpdateUserParams{req.GetUserId(), req.GetUsername(), req.GetPassword(), req.GetEmail(), sql.NullString{String: req.GetProfile()}, sql.NullInt32{Int32: int32(req.GetMembership())}, time.Now()})
+	user, err := r.SqlHandler.Queries.UpdateUser(ctx, sqlc.UpdateUserParams{UserID: req.GetUserId(), Username: req.GetUsername(), Password: req.GetPassword(), Email: req.GetEmail(), Profile: sql.NullString{String: req.GetProfile()}, Membership: sql.NullInt32{Int32: int32(req.GetMembership())}, UpdatedAt: time.Now()})
+	if err != nil {
+		return nil, err
+	}
 	var m autogen.MemgerShip
 	user.Membership.Scan(&m)
 	return &autogen.User{
@@ -46,12 +61,12 @@ func (r *UserRepository) Update(ctx context.Context, req *autogen.UpdateUserRequ
 		Password:     user.Password,
 		Email:        user.Email,
 		Profile:      user.Profile.String,
-		CreatedAt:    user.CreatedAt.(*datetime.DateTime),
-		UpdatedAt:    user.UpdatedAt.(*datetime.DateTime),
+		CreatedAt:    utility.ToDatetime(user.CreatedAt),
+		UpdatedAt:    utility.ToDatetime(user.UpdatedAt),
 		Membership:   m,
 		LikedQuizIds: strings.Split(user.LikedQuizIds.String, ","),
 		QuizHistory:  strings.Split(user.QuizHistory.String, ","),
-	}, err
+	}, nil
 }
 
 // TODO: append quiz_id to User.QuizHistory
@@ -61,6 +76,9 @@ func (r *UserRepository) AppendQuizHistory() {
 
 func (r *UserRepository) Find(ctx context.Context, req *autogen.UserRequest) (*autogen.User, error) {
 	user, err := r.SqlHandler.Queries.FindUser(ctx, req.GetUserId())
+	if err != nil {
+		return nil, err
+	}
 	var m autogen.MemgerShip
 	user.Membership.Scan(&m)
 	return &autogen.User{
@@ -69,12 +87,12 @@ func (r *UserRepository) Find(ctx context.Context, req *autogen.UserRequest) (*a
 		Password:     user.Password,
 		Email:        user.Email,
 		Profile:      user.Profile.String,
-		CreatedAt:    user.CreatedAt.(*datetime.DateTime),
-		UpdatedAt:    user.UpdatedAt.(*datetime.DateTime),
+		CreatedAt:    utility.ToDatetime(user.CreatedAt),
+		UpdatedAt:    utility.ToDatetime(user.UpdatedAt),
 		Membership:   m,
 		LikedQuizIds: strings.Split(user.LikedQuizIds.String, ","),
 		QuizHistory:  strings.Split(user.QuizHistory.String, ","),
-	}, err
+	}, nil
 }
 
 func (r *UserRepository) Delete(ctx context.Context, req *autogen.UserRequest) error {
@@ -95,30 +113,30 @@ type QuizRepository struct {
 func (r *QuizRepository) Create(ctx context.Context, req *autogen.AddQuizRequest) (*autogen.Quiz, error) {
 	quiz, err := r.SqlHandler.Queries.AddQuiz(ctx,
 		sqlc.AddQuizParams{
-			req.GetLanguage(),
-			int32(autogen.QuizStatus_DRAFT),
-			int32(req.GetDiagramType()),
-			sql.NullString{String: req.GetLevel()},
-			sql.NullString{String: req.GetTitle()},
-			sql.NullString{String: req.GetText()},
-			sql.NullString{String: req.GetDiagram()},
-			sql.NullString{String: req.GetAuthorId()},
-			time.Now(),
-			time.Now(),
+			Language:    req.GetLanguage(),
+			Status:      int32(autogen.QuizStatus_DRAFT),
+			DiagramType: int32(req.GetDiagramType()),
+			Level:       sql.NullString{String: req.GetLevel()},
+			Title:       sql.NullString{String: req.GetTitle()},
+			Text:        sql.NullString{String: req.GetText()},
+			Diagram:     sql.NullString{String: req.GetDiagram()},
+			AuthorID:    sql.NullString{String: req.GetAuthorId()},
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
 		})
 	if err != nil {
-		return &autogen.Quiz{}, err
+		return nil, err
 	}
 	quiz, err = r.SqlHandler.Queries.UpdateQuizID(ctx,
 		sqlc.UpdateQuizIDParams{
-			uuid.New().String(),
-			req.GetLanguage(),
-			sql.NullString{String: req.GetTitle()},
-			quiz.CreatedAt,
+			QuizID:    uuid.New().String(),
+			Language:  req.GetLanguage(),
+			Title:     sql.NullString{String: req.GetTitle()},
+			CreatedAt: quiz.CreatedAt,
 		},
 	)
 	if err != nil {
-		return &autogen.Quiz{}, err
+		return nil, err
 	}
 	return &autogen.Quiz{
 		QuizId:      quiz.QuizID,
@@ -131,26 +149,29 @@ func (r *QuizRepository) Create(ctx context.Context, req *autogen.AddQuizRequest
 		Diagram:     quiz.Diagram.String,
 		Likes:       quiz.Likes.Int32,
 		AuthorId:    quiz.AuthorID.String,
-		CreatedAt:   quiz.CreatedAt.(*datetime.DateTime),
-		UpdatedAt:   quiz.UpdatedAt.(*datetime.DateTime),
-	}, err
+		CreatedAt:   utility.ToDatetime(quiz.CreatedAt),
+		UpdatedAt:   utility.ToDatetime(quiz.UpdatedAt),
+	}, nil
 }
 
 func (r *QuizRepository) UpdateUpdate(ctx context.Context, req *autogen.UpdateQuizRequest) (*autogen.Quiz, error) {
 	quiz, err := r.SqlHandler.Queries.UpdateQuiz(ctx,
 		sqlc.UpdateQuizParams{
-			req.GetQuizId(),
-			req.GetLanguage(),
-			int32(req.GetStatus()),
-			int32(req.GetDiagramType()),
-			sql.NullString{String: req.GetLevel()},
-			sql.NullString{String: req.GetTitle()},
-			sql.NullString{String: req.GetText()},
-			sql.NullString{String: req.GetDiagram()},
-			sql.NullInt32{Int32: req.GetLikes()},
-			time.Now(),
+			QuizID:      req.GetQuizId(),
+			Language:    req.GetLanguage(),
+			Status:      int32(req.GetStatus()),
+			DiagramType: int32(req.GetDiagramType()),
+			Level:       sql.NullString{String: req.GetLevel()},
+			Title:       sql.NullString{String: req.GetTitle()},
+			Text:        sql.NullString{String: req.GetText()},
+			Diagram:     sql.NullString{String: req.GetDiagram()},
+			Likes:       sql.NullInt32{Int32: req.GetLikes()},
+			UpdatedAt:   time.Now(),
 		},
 	)
+	if err != nil {
+		return nil, err
+	}
 	return &autogen.Quiz{
 		QuizId:      quiz.QuizID,
 		Language:    quiz.Language,
@@ -162,17 +183,17 @@ func (r *QuizRepository) UpdateUpdate(ctx context.Context, req *autogen.UpdateQu
 		Diagram:     quiz.Diagram.String,
 		Likes:       quiz.Likes.Int32,
 		AuthorId:    quiz.AuthorID.String,
-		CreatedAt:   quiz.CreatedAt.(*datetime.DateTime),
-		UpdatedAt:   quiz.UpdatedAt.(*datetime.DateTime),
-	}, err
+		CreatedAt:   utility.ToDatetime(quiz.CreatedAt),
+		UpdatedAt:   utility.ToDatetime(quiz.UpdatedAt),
+	}, nil
 }
 
 func (r *QuizRepository) UpdateLike(ctx context.Context, req *autogen.LikeQuizRequest) error {
 	return r.SqlHandler.Queries.UpdateQuizLike(ctx,
 		sqlc.UpdateQuizLikeParams{
-			req.GetQuizId(),
-			req.GetLanguage(),
-			sql.NullInt32{Int32: req.GetDiffLike()},
+			QuizID:   req.GetQuizId(),
+			Language: req.GetLanguage(),
+			Likes:    sql.NullInt32{Int32: req.GetDiffLike()},
 		},
 	)
 }
@@ -180,12 +201,12 @@ func (r *QuizRepository) UpdateLike(ctx context.Context, req *autogen.LikeQuizRe
 func (r *QuizRepository) Find(ctx context.Context, req *autogen.FindQuizRequest) (*autogen.Quiz, error) {
 	quiz, err := r.SqlHandler.Queries.FindQuiz(ctx,
 		sqlc.FindQuizParams{
-			req.GetQuizId(),
-			req.GetLanguage(),
+			QuizID:   req.GetQuizId(),
+			Language: req.GetLanguage(),
 		},
 	)
 	if err != nil {
-		return &autogen.Quiz{}, err
+		return nil, err
 	}
 	return &autogen.Quiz{
 		QuizId:      quiz.QuizID,
@@ -198,16 +219,16 @@ func (r *QuizRepository) Find(ctx context.Context, req *autogen.FindQuizRequest)
 		Diagram:     quiz.Diagram.String,
 		Likes:       quiz.Likes.Int32,
 		AuthorId:    quiz.AuthorID.String,
-		CreatedAt:   quiz.CreatedAt.(*datetime.DateTime),
-		UpdatedAt:   quiz.UpdatedAt.(*datetime.DateTime),
-	}, err
+		CreatedAt:   utility.ToDatetime(quiz.CreatedAt),
+		UpdatedAt:   utility.ToDatetime(quiz.UpdatedAt),
+	}, nil
 }
 
 func (r *QuizRepository) Delete(ctx context.Context, req *autogen.DeleteQuizRequest) error {
 	return r.SqlHandler.Queries.DeleteQuiz(ctx,
 		sqlc.DeleteQuizParams{
-			req.GetQuizId(),
-			req.GetLanguage(),
+			QuizID:   req.GetQuizId(),
+			Language: req.GetLanguage(),
 		},
 	)
 }
@@ -226,19 +247,19 @@ type ReportRepository struct {
 func (r *ReportRepository) Create(ctx context.Context, req *autogen.AddReportRequest) (*autogen.Report, error) {
 	report, err := r.SqlHandler.Queries.AddReport(ctx,
 		sqlc.AddReportParams{
-			uuid.New().String(),
-			sql.NullString{String: req.GetQuizId()},
-			sql.NullString{String: req.GetLanguage()},
-			sql.NullString{String: req.GetUserId()},
-			sql.NullString{String: req.GetTitle()},
-			sql.NullString{String: req.GetText()},
-			sql.NullString{String: req.GetDiagram()},
-			sql.NullString{String: req.GetComment()},
-			time.Now(),
+			ReportID:  uuid.New().String(),
+			QuizID:    sql.NullString{String: req.GetQuizId()},
+			Language:  sql.NullString{String: req.GetLanguage()},
+			AuthorID:  sql.NullString{String: req.GetUserId()},
+			Title:     sql.NullString{String: req.GetTitle()},
+			Text:      sql.NullString{String: req.GetText()},
+			Diagram:   sql.NullString{String: req.GetDiagram()},
+			Comment:   sql.NullString{String: req.GetComment()},
+			CreatedAt: time.Now(),
 		},
 	)
 	if err != nil {
-		return &autogen.Report{}, err
+		return nil, err
 	}
 	return &autogen.Report{
 		ReportId: report.ReportID,
@@ -249,21 +270,21 @@ func (r *ReportRepository) Create(ctx context.Context, req *autogen.AddReportReq
 		Text:     report.Text.String,
 		Diagram:  report.Diagram.String,
 		Comment:  report.Comment.String,
-	}, err
+	}, nil
 }
 
 func (r *ReportRepository) Update(ctx context.Context, req *autogen.UpdateReportRequest) (*autogen.Report, error) {
 	report, err := r.SqlHandler.Queries.UpdateReport(ctx,
 		sqlc.UpdateReportParams{
-			req.GetReportId(),
-			sql.NullString{String: req.GetTitle()},
-			sql.NullString{String: req.GetText()},
-			sql.NullString{String: req.GetDiagram()},
-			sql.NullString{String: req.GetComment()},
+			ReportID: req.GetReportId(),
+			Title:    sql.NullString{String: req.GetTitle()},
+			Text:     sql.NullString{String: req.GetText()},
+			Diagram:  sql.NullString{String: req.GetDiagram()},
+			Comment:  sql.NullString{String: req.GetComment()},
 		},
 	)
 	if err != nil {
-		return &autogen.Report{}, err
+		return nil, err
 	}
 	return &autogen.Report{
 		ReportId: report.ReportID,
@@ -274,18 +295,18 @@ func (r *ReportRepository) Update(ctx context.Context, req *autogen.UpdateReport
 		Text:     report.Text.String,
 		Diagram:  report.Diagram.String,
 		Comment:  report.Comment.String,
-	}, err
+	}, nil
 }
 
 func (r *ReportRepository) Find(ctx context.Context, req *autogen.FindReportsRequest) ([]*autogen.Report, error) {
 	reports, err := r.SqlHandler.Queries.FindReport(ctx,
 		sqlc.FindReportParams{
-			sql.NullString{String: req.GetQuizId()},
-			sql.NullString{String: req.GetLanguage()},
+			QuizID:   sql.NullString{String: req.GetQuizId()},
+			Language: sql.NullString{String: req.GetLanguage()},
 		},
 	)
 	if err != nil {
-		return []*autogen.Report{}, err
+		return nil, err
 	}
 	var result []*autogen.Report
 	for _, report := range reports {
@@ -302,7 +323,7 @@ func (r *ReportRepository) Find(ctx context.Context, req *autogen.FindReportsReq
 			},
 		)
 	}
-	return result, err
+	return result, nil
 }
 
 func (r *ReportRepository) Delete(ctx context.Context, req *autogen.DeleteReportRequest) error {

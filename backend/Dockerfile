@@ -28,5 +28,7 @@ FROM alpine:latest
 ENV TZ=Asia/Tokyo
 WORKDIR /home
 COPY --from=compiler /go/src/app /home
+RUN mkdir -p /home/api
+COPY ./api ./api
 
-CMD ["/home/app"]
+CMD ["sh", "-c", "sleep 4; ./app"]

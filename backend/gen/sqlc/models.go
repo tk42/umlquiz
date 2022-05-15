@@ -6,6 +6,7 @@ package sqlc
 
 import (
 	"database/sql"
+	"time"
 )
 
 type Quiz struct {
@@ -19,8 +20,8 @@ type Quiz struct {
 	Diagram     sql.NullString `json:"diagram"`
 	Likes       sql.NullInt32  `json:"likes"`
 	AuthorID    sql.NullString `json:"author_id"`
-	CreatedAt   interface{}    `json:"created_at"`
-	UpdatedAt   interface{}    `json:"updated_at"`
+	CreatedAt   time.Time      `json:"created_at"`
+	UpdatedAt   time.Time      `json:"updated_at"`
 }
 
 type Report struct {
@@ -32,7 +33,7 @@ type Report struct {
 	Text      sql.NullString `json:"text"`
 	Diagram   sql.NullString `json:"diagram"`
 	Comment   sql.NullString `json:"comment"`
-	CreatedAt interface{}    `json:"created_at"`
+	CreatedAt time.Time      `json:"created_at"`
 }
 
 type User struct {
@@ -41,8 +42,8 @@ type User struct {
 	Password     string         `json:"password"`
 	Email        string         `json:"email"`
 	Profile      sql.NullString `json:"profile"`
-	CreatedAt    interface{}    `json:"created_at"`
-	UpdatedAt    interface{}    `json:"updated_at"`
+	CreatedAt    time.Time      `json:"created_at"`
+	UpdatedAt    time.Time      `json:"updated_at"`
 	Membership   sql.NullInt32  `json:"membership"`
 	LikedQuizIds sql.NullString `json:"liked_quiz_ids"`
 	QuizHistory  sql.NullString `json:"quiz_history"`
