@@ -7,6 +7,7 @@ import (
 
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+	grpczap "github.com/grpc-ecosystem/go-grpc-middleware/logging/zap"
 	auth "github.com/tk42/jwt-go-auth"
 	"github.com/tk42/umlquiz/backend/gen/proto/golang/github.com/tk42/umlquiz"
 	"github.com/tk42/victolinux/env"
@@ -37,6 +38,7 @@ func main() {
 
 	authInterceptor := grpc.UnaryInterceptor(
 		grpcMiddleware.ChainUnaryServer(
+			grpczap.UnaryServerInterceptor(logger.Logger),
 			grpc_auth.UnaryServerInterceptor(env.AuthFunc),
 		),
 	)
