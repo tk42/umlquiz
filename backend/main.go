@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net"
 
 	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	auth "github.com/tk42/jwt-go-auth"
 	"github.com/tk42/umlquiz/backend/gen/proto/golang/github.com/tk42/umlquiz"
+	"github.com/tk42/victolinux/env"
 
 	"github.com/tk42/victolinux/logging/v2"
 	"go.uber.org/zap"
@@ -16,17 +18,15 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const (
-	ADDRESS = "0.0.0.0:8080"
-)
-
 func main() {
 	c := context.Background()
 
-	logger := logging.GetLogger("umlquiz", logging.LogLevel(zapcore.DebugLevel))
-	logger.Info("sever start", zap.String("address", ADDRESS))
+	address := fmt.Sprintf("0.0.0.0:%s", env.GetString("PORT", "8080"))
 
-	listener, err := net.Listen("tcp", ADDRESS)
+	logger := logging.GetLogger("umlquiz", logging.LogLevel(zapcore.DebugLevel))
+	logger.Info("sever start", zap.String("address", address))
+
+	listener, err := net.Listen("tcp", address)
 	if err != nil {
 		panic(err)
 	}

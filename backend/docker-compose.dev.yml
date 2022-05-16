@@ -5,6 +5,7 @@ services:
     build:
       context: .
     environment:
+      - PORT=8080
       - DB_HOST=db
       - DB_PORT=5432
       - DB_USER=postgres
