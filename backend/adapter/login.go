@@ -14,6 +14,8 @@ import (
 type ServerUnauthenticated struct {
 	autogen.UnimplementedUMLQuizLoginServiceServer
 	SigningSecret []byte
+
+	isMultipleLogin bool
 }
 
 func NewServerUnauthenticated() ServerUnauthenticated {
@@ -22,7 +24,8 @@ func NewServerUnauthenticated() ServerUnauthenticated {
 		panic("GRPC_AUTH_TOKEN is empty")
 	}
 	return ServerUnauthenticated{
-		SigningSecret: secretBytes,
+		isMultipleLogin: env.GetBoolean("GRPC_AUTH_MULTIPLE_LOGIN", false),
+		SigningSecret:   secretBytes,
 	}
 }
 
@@ -39,6 +42,9 @@ func (s *ServerUnauthenticated) AuthFuncOverride(ctx context.Context, fullMethod
 }
 
 func (s *ServerUnauthenticated) GetToken(ctx context.Context, req *autogen.GetTokenRequest) (*autogen.GetTokenResponse, error) {
+	if !s.isMultipleLogin && req.Username+":"+req.Password != string(s.SigningSecret) {
+		return nil, status.Errorf(codes.Internal, "failed to authentication")
+	}
 	tokenSigned, err := auth.GenerateToken(req.Username, s.SigningSecret)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "could not generate token")
