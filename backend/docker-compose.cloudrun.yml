@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  client:
+    image: ghcr.io/tk42/grpcui
+    environment: 
+      - GRPCUI_SERVER=umlquiz-wphmvh57gq-uc.a.run.app:443
+    volumes:
+      - .:/home
+    ports:
+      - 8888:8080

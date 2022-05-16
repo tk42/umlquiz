@@ -8,39 +8,6 @@ import * as grpc from "grpc";
 import * as umlquiz_pb from "./umlquiz_pb";
 import * as google_type_datetime_pb from "./google/type/datetime_pb";
 
-interface IUMLQuizLoginServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
-    getToken: IUMLQuizLoginServiceService_IGetToken;
-}
-
-interface IUMLQuizLoginServiceService_IGetToken extends grpc.MethodDefinition<umlquiz_pb.GetTokenRequest, umlquiz_pb.GetTokenResponse> {
-    path: "/umlquiz.UMLQuizLoginService/GetToken";
-    requestStream: false;
-    responseStream: false;
-    requestSerialize: grpc.serialize<umlquiz_pb.GetTokenRequest>;
-    requestDeserialize: grpc.deserialize<umlquiz_pb.GetTokenRequest>;
-    responseSerialize: grpc.serialize<umlquiz_pb.GetTokenResponse>;
-    responseDeserialize: grpc.deserialize<umlquiz_pb.GetTokenResponse>;
-}
-
-export const UMLQuizLoginServiceService: IUMLQuizLoginServiceService;
-
-export interface IUMLQuizLoginServiceServer {
-    getToken: grpc.handleUnaryCall<umlquiz_pb.GetTokenRequest, umlquiz_pb.GetTokenResponse>;
-}
-
-export interface IUMLQuizLoginServiceClient {
-    getToken(request: umlquiz_pb.GetTokenRequest, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.GetTokenResponse) => void): grpc.ClientUnaryCall;
-    getToken(request: umlquiz_pb.GetTokenRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.GetTokenResponse) => void): grpc.ClientUnaryCall;
-    getToken(request: umlquiz_pb.GetTokenRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.GetTokenResponse) => void): grpc.ClientUnaryCall;
-}
-
-export class UMLQuizLoginServiceClient extends grpc.Client implements IUMLQuizLoginServiceClient {
-    constructor(address: string, credentials: grpc.ChannelCredentials, options?: object);
-    public getToken(request: umlquiz_pb.GetTokenRequest, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.GetTokenResponse) => void): grpc.ClientUnaryCall;
-    public getToken(request: umlquiz_pb.GetTokenRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.GetTokenResponse) => void): grpc.ClientUnaryCall;
-    public getToken(request: umlquiz_pb.GetTokenRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.GetTokenResponse) => void): grpc.ClientUnaryCall;
-}
-
 interface IUMLQuizUserServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
     addUser: IUMLQuizUserServiceService_IAddUser;
     updateUser: IUMLQuizUserServiceService_IUpdateUser;

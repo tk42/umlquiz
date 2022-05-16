@@ -31,9 +31,4 @@ COPY --from=compiler /go/src/app /home
 RUN mkdir -p /home/api
 COPY ./api ./api
 
-# install certificates
-# These are needed if your application wants to communicate with the outside world.
-# https://petomalina.medium.com/serverless-grpc-with-cloud-run-bab3622a47da
-RUN apk update && apk add ca-certificates && update-ca-certificates && rm -rf /var/cache/apk/*
-
 CMD ["sh", "-c", "sleep 4; ./app"]

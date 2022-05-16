@@ -61,7 +61,10 @@ func (u *QuizUsecase) DeleteQuiz(ctx context.Context, req *autogen.DeleteQuizReq
 	return u.QuizRepository.Delete(ctx, req)
 }
 func (u *QuizUsecase) ListQuizzesAll(ctx context.Context, req *autogen.ListQuizzesAllRequest) ([]*autogen.Quiz, error) {
-	quizzez, err := u.QuizRepository.SqlHandler.Queries.ListQuizzesAll(ctx, sqlc.ListQuizzesAllParams{req.GetLanguage(), int32(req.GetStatus())})
+	quizzez, err := u.QuizRepository.SqlHandler.Queries.ListQuizzesAll(ctx, sqlc.ListQuizzesAllParams{
+		Language: req.GetLanguage(),
+		Status:   int32(req.GetStatus()),
+	})
 	var result []*autogen.Quiz
 	for _, quiz := range quizzez {
 		result = append(result, &autogen.Quiz{
@@ -82,7 +85,12 @@ func (u *QuizUsecase) ListQuizzesAll(ctx context.Context, req *autogen.ListQuizz
 	return result, err
 }
 func (u *QuizUsecase) ListQuizzesByUser(ctx context.Context, req *autogen.ListQuizzesByUserRequest) ([]*autogen.Quiz, error) {
-	quizzez, err := u.QuizRepository.SqlHandler.Queries.ListQuizzesByUser(ctx, sqlc.ListQuizzesByUserParams{sql.NullString{String: req.GetUserId()}, req.GetLanguage(), int32(req.GetStatus())})
+	quizzez, err := u.QuizRepository.SqlHandler.Queries.ListQuizzesByUser(ctx,
+		sqlc.ListQuizzesByUserParams{
+			AuthorID: sql.NullString{String: req.GetUserId()},
+			Language: req.GetLanguage(),
+			Status:   int32(req.GetStatus()),
+		})
 	var result []*autogen.Quiz
 	for _, quiz := range quizzez {
 		result = append(result,
