@@ -10,6 +10,7 @@ services:
       - DB_USER=postgres
       - DB_PASS=e8a48653851e28c69d0506508fb27fc5
       - DB_NAME=umlquiz
+      - GRPC_AUTH_TOKEN=hoge
     ports:
       - 8080:8080
     depends_on:

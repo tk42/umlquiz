@@ -206,13 +206,27 @@ message ErrorResponse {
 }
 
 
+message GetTokenRequest {
+    string username = 1;
+    string password = 2;
+}
 
-service UMLQuizService {
+message GetTokenResponse {
+    string token = 1;
+}
+
+service UMLQuizLoginService {
+    rpc GetToken (GetTokenRequest) returns (GetTokenResponse) {}
+}
+
+service UMLQuizUserService {
     rpc AddUser(AddUserRequest) returns (UserResponse) {}
     rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {}
     rpc FindUser(UserRequest) returns (UserResponse) {}
     rpc DeleteUser(UserRequest) returns (ErrorResponse) {}
+}
 
+service UMLQuizQuizService {
     rpc AddQuiz(AddQuizRequest) returns (QuizResponse) {}
     rpc FindQuiz(FindQuizRequest) returns (QuizResponse) {}
     rpc UpdateQuiz(UpdateQuizRequest) returns (QuizResponse) {}
@@ -221,7 +235,9 @@ service UMLQuizService {
     rpc ListQuizzesByUser(ListQuizzesByUserRequest) returns (QuizzesResponse) {}
     rpc SolveQuiz(SolveQuizRequest) returns (SolveResponse) {}
     rpc LikeQuiz(LikeQuizRequest) returns (ErrorResponse) {}
+}
 
+service UMLQuizReportService{
     rpc AddReport(AddReportRequest) returns (ReportResponse) {}
     rpc FindReports(FindReportsRequest) returns (ReportsResponse) {}
     rpc UpdateReport(UpdateReportRequest) returns (ReportResponse) {}

@@ -2,13 +2,13 @@ package main
 
 import (
 	"context"
-	"errors"
 	"net"
 
+	grpcMiddleware "github.com/grpc-ecosystem/go-grpc-middleware"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+	auth "github.com/tk42/jwt-go-auth"
 	"github.com/tk42/umlquiz/backend/gen/proto/golang/github.com/tk42/umlquiz"
 
-	"github.com/tk42/victolinux/env"
 	"github.com/tk42/victolinux/logging/v2"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -19,17 +19,6 @@ import (
 const (
 	ADDRESS = "0.0.0.0:8080"
 )
-
-func authenticate(ctx context.Context) (context.Context, error) {
-	token, err := grpc_auth.AuthFromMD(ctx, "Bearer")
-	if err != nil {
-		return nil, err
-	}
-	if token != env.GetString("GRPC_AUTH_TOKEN", "") {
-		return nil, errors.New("unauthorized")
-	}
-	return ctx, nil
-}
 
 func main() {
 	c := context.Background()
@@ -42,22 +31,26 @@ func main() {
 		panic(err)
 	}
 
-	var s *grpc.Server
-	var isAuthSet bool
-	if env.GetString("GRPC_AUTH_TOKEN", "") == "" {
-		s = grpc.NewServer()
-		isAuthSet = false
-	} else {
-		authInterceptor := grpc.UnaryInterceptor(grpc_auth.UnaryServerInterceptor(authenticate))
-		s = grpc.NewServer(authInterceptor)
-		isAuthSet = true
-	}
+	loginServer := InjectServerUnauthenticated()
+
+	env := auth.Env{SecretSigningKey: loginServer.SigningSecret}
+
+	authInterceptor := grpc.UnaryInterceptor(
+		grpcMiddleware.ChainUnaryServer(
+			grpc_auth.UnaryServerInterceptor(env.AuthFunc),
+		),
+	)
+
+	s := grpc.NewServer(authInterceptor)
+	umlquiz.RegisterUMLQuizLoginServiceServer(s, &loginServer)
 
 	presentation := InjectPresentation()
-	umlquiz.RegisterUMLQuizServiceServer(s, &presentation)
+	umlquiz.RegisterUMLQuizUserServiceServer(s, &presentation)
+	umlquiz.RegisterUMLQuizQuizServiceServer(s, &presentation)
+	umlquiz.RegisterUMLQuizReportServiceServer(s, &presentation)
 	reflection.Register(s)
 
-	logger.Info("starting to listen", zap.Bool("isAuthSet", isAuthSet))
+	logger.Info("starting to listen")
 
 	go func(ctx context.Context) {
 		<-ctx.Done()
