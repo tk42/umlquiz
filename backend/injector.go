@@ -51,6 +51,6 @@ func InjectPresentation() adapter.Presentation {
 	return adapter.NewPresentation(InjectUserUsecase(), InjectQuizUsecase())
 }
 
-// func InjectServerUnauthenticated() adapter.ServerUnauthenticated {
-// 	return adapter.NewServerUnauthenticated()
-// }
+func InjectServerUnauthenticated() adapter.ServerUnauthenticated {
+	return adapter.NewServerUnauthenticated()
+}

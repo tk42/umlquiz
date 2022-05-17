@@ -206,18 +206,18 @@ message ErrorResponse {
 }
 
 
-// message GetTokenRequest {
-//     string username = 1;
-//     string password = 2;
-// }
+message GetTokenRequest {
+    string username = 1;
+    string password = 2;
+}
 
-// message GetTokenResponse {
-//     string token = 1;
-// }
+message GetTokenResponse {
+    string token = 1;
+}
 
-// service UMLQuizLoginService {
-//     rpc GetToken (GetTokenRequest) returns (GetTokenResponse) {}
-// }
+service UMLQuizLoginService {
+    rpc GetToken (GetTokenRequest) returns (GetTokenResponse) {}
+}
 
 
 message HelloRequest {
