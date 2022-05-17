@@ -8,6 +8,39 @@ import * as grpc from "grpc";
 import * as umlquiz_pb from "./umlquiz_pb";
 import * as google_type_datetime_pb from "./google/type/datetime_pb";
 
+interface IUMLQuizHelloServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
+    hello: IUMLQuizHelloServiceService_IHello;
+}
+
+interface IUMLQuizHelloServiceService_IHello extends grpc.MethodDefinition<umlquiz_pb.HelloRequest, umlquiz_pb.HelloResponse> {
+    path: "/umlquiz.UMLQuizHelloService/Hello";
+    requestStream: false;
+    responseStream: false;
+    requestSerialize: grpc.serialize<umlquiz_pb.HelloRequest>;
+    requestDeserialize: grpc.deserialize<umlquiz_pb.HelloRequest>;
+    responseSerialize: grpc.serialize<umlquiz_pb.HelloResponse>;
+    responseDeserialize: grpc.deserialize<umlquiz_pb.HelloResponse>;
+}
+
+export const UMLQuizHelloServiceService: IUMLQuizHelloServiceService;
+
+export interface IUMLQuizHelloServiceServer {
+    hello: grpc.handleUnaryCall<umlquiz_pb.HelloRequest, umlquiz_pb.HelloResponse>;
+}
+
+export interface IUMLQuizHelloServiceClient {
+    hello(request: umlquiz_pb.HelloRequest, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.HelloResponse) => void): grpc.ClientUnaryCall;
+    hello(request: umlquiz_pb.HelloRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.HelloResponse) => void): grpc.ClientUnaryCall;
+    hello(request: umlquiz_pb.HelloRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.HelloResponse) => void): grpc.ClientUnaryCall;
+}
+
+export class UMLQuizHelloServiceClient extends grpc.Client implements IUMLQuizHelloServiceClient {
+    constructor(address: string, credentials: grpc.ChannelCredentials, options?: object);
+    public hello(request: umlquiz_pb.HelloRequest, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.HelloResponse) => void): grpc.ClientUnaryCall;
+    public hello(request: umlquiz_pb.HelloRequest, metadata: grpc.Metadata, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.HelloResponse) => void): grpc.ClientUnaryCall;
+    public hello(request: umlquiz_pb.HelloRequest, metadata: grpc.Metadata, options: Partial<grpc.CallOptions>, callback: (error: grpc.ServiceError | null, response: umlquiz_pb.HelloResponse) => void): grpc.ClientUnaryCall;
+}
+
 interface IUMLQuizUserServiceService extends grpc.ServiceDefinition<grpc.UntypedServiceImplementation> {
     addUser: IUMLQuizUserServiceService_IAddUser;
     updateUser: IUMLQuizUserServiceService_IUpdateUser;

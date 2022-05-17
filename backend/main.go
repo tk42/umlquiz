@@ -44,6 +44,7 @@ func main() {
 	// umlquiz.RegisterUMLQuizLoginServiceServer(s, &loginServer)
 
 	presentation := InjectPresentation()
+	umlquiz.RegisterUMLQuizHelloServiceServer(s, &presentation)
 	umlquiz.RegisterUMLQuizUserServiceServer(s, &presentation)
 	umlquiz.RegisterUMLQuizQuizServiceServer(s, &presentation)
 	umlquiz.RegisterUMLQuizReportServiceServer(s, &presentation)

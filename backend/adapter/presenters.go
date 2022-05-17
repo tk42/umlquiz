@@ -12,6 +12,7 @@ import (
 )
 
 type Presentation struct {
+	autogen.UnimplementedUMLQuizHelloServiceServer
 	autogen.UnimplementedUMLQuizUserServiceServer
 	autogen.UnimplementedUMLQuizQuizServiceServer
 	autogen.UnimplementedUMLQuizReportServiceServer
@@ -27,6 +28,12 @@ func (p *Presentation) authenticate(ctx context.Context) error {
 		return status.Errorf(codes.Unauthenticated, "context not authenticated")
 	}
 	return nil
+}
+
+func (p *Presentation) Hello(ctx context.Context, req *autogen.HelloRequest) (*autogen.HelloResponse, error) {
+	return &autogen.HelloResponse{
+		Response: fmt.Sprintf("requested: %s", req.GetRequest()),
+	}, nil
 }
 
 func (p *Presentation) AddUser(ctx context.Context, req *autogen.AddUserRequest) (*autogen.UserResponse, error) {

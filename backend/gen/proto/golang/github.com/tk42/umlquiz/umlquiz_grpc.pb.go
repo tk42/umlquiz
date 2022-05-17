@@ -18,6 +18,90 @@ import (
 // Requires gRPC-Go v1.32.0 or later.
 const _ = grpc.SupportPackageIsVersion7
 
+// UMLQuizHelloServiceClient is the client API for UMLQuizHelloService service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type UMLQuizHelloServiceClient interface {
+	Hello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error)
+}
+
+type uMLQuizHelloServiceClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewUMLQuizHelloServiceClient(cc grpc.ClientConnInterface) UMLQuizHelloServiceClient {
+	return &uMLQuizHelloServiceClient{cc}
+}
+
+func (c *uMLQuizHelloServiceClient) Hello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloResponse, error) {
+	out := new(HelloResponse)
+	err := c.cc.Invoke(ctx, "/umlquiz.UMLQuizHelloService/Hello", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// UMLQuizHelloServiceServer is the server API for UMLQuizHelloService service.
+// All implementations should embed UnimplementedUMLQuizHelloServiceServer
+// for forward compatibility
+type UMLQuizHelloServiceServer interface {
+	Hello(context.Context, *HelloRequest) (*HelloResponse, error)
+}
+
+// UnimplementedUMLQuizHelloServiceServer should be embedded to have forward compatible implementations.
+type UnimplementedUMLQuizHelloServiceServer struct {
+}
+
+func (UnimplementedUMLQuizHelloServiceServer) Hello(context.Context, *HelloRequest) (*HelloResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Hello not implemented")
+}
+
+// UnsafeUMLQuizHelloServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to UMLQuizHelloServiceServer will
+// result in compilation errors.
+type UnsafeUMLQuizHelloServiceServer interface {
+	mustEmbedUnimplementedUMLQuizHelloServiceServer()
+}
+
+func RegisterUMLQuizHelloServiceServer(s grpc.ServiceRegistrar, srv UMLQuizHelloServiceServer) {
+	s.RegisterService(&UMLQuizHelloService_ServiceDesc, srv)
+}
+
+func _UMLQuizHelloService_Hello_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(HelloRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UMLQuizHelloServiceServer).Hello(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/umlquiz.UMLQuizHelloService/Hello",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UMLQuizHelloServiceServer).Hello(ctx, req.(*HelloRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// UMLQuizHelloService_ServiceDesc is the grpc.ServiceDesc for UMLQuizHelloService service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var UMLQuizHelloService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "umlquiz.UMLQuizHelloService",
+	HandlerType: (*UMLQuizHelloServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "Hello",
+			Handler:    _UMLQuizHelloService_Hello_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "umlquiz.proto",
+}
+
 // UMLQuizUserServiceClient is the client API for UMLQuizUserService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.

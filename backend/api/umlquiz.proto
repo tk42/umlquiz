@@ -219,6 +219,19 @@ message ErrorResponse {
 //     rpc GetToken (GetTokenRequest) returns (GetTokenResponse) {}
 // }
 
+
+message HelloRequest {
+    string request = 1;
+}
+
+message HelloResponse {
+    string response = 1;
+}
+
+service UMLQuizHelloService {
+    rpc Hello(HelloRequest) returns (HelloResponse) {}
+}
+
 service UMLQuizUserService {
     rpc AddUser(AddUserRequest) returns (UserResponse) {}
     rpc UpdateUser(UpdateUserRequest) returns (UserResponse) {}
