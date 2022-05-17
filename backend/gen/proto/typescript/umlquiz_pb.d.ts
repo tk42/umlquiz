@@ -770,6 +770,49 @@ export namespace ErrorResponse {
     }
 }
 
+export class GetTokenRequest extends jspb.Message { 
+    getUsername(): string;
+    setUsername(value: string): GetTokenRequest;
+    getPassword(): string;
+    setPassword(value: string): GetTokenRequest;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetTokenRequest.AsObject;
+    static toObject(includeInstance: boolean, msg: GetTokenRequest): GetTokenRequest.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetTokenRequest, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetTokenRequest;
+    static deserializeBinaryFromReader(message: GetTokenRequest, reader: jspb.BinaryReader): GetTokenRequest;
+}
+
+export namespace GetTokenRequest {
+    export type AsObject = {
+        username: string,
+        password: string,
+    }
+}
+
+export class GetTokenResponse extends jspb.Message { 
+    getToken(): string;
+    setToken(value: string): GetTokenResponse;
+
+    serializeBinary(): Uint8Array;
+    toObject(includeInstance?: boolean): GetTokenResponse.AsObject;
+    static toObject(includeInstance: boolean, msg: GetTokenResponse): GetTokenResponse.AsObject;
+    static extensions: {[key: number]: jspb.ExtensionFieldInfo<jspb.Message>};
+    static extensionsBinary: {[key: number]: jspb.ExtensionFieldBinaryInfo<jspb.Message>};
+    static serializeBinaryToWriter(message: GetTokenResponse, writer: jspb.BinaryWriter): void;
+    static deserializeBinary(bytes: Uint8Array): GetTokenResponse;
+    static deserializeBinaryFromReader(message: GetTokenResponse, reader: jspb.BinaryReader): GetTokenResponse;
+}
+
+export namespace GetTokenResponse {
+    export type AsObject = {
+        token: string,
+    }
+}
+
 export class HelloRequest extends jspb.Message { 
     getRequest(): string;
     setRequest(value: string): HelloRequest;

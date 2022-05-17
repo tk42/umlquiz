@@ -234,3 +234,26 @@ classDiagram
     Quiz..>QuizStatus
     Quiz..>DiagramType
 ```
+
+
+## Nextjs with gRPC
+ - (Next.js で始める gRPC 通信)[https://numb86-tech.hatenablog.com/entry/2022/02/12/154459]
+ - (OK Google, Protocol Buffers から生成したコードを使って Node.js で gRPC 通信して)[https://engineering.mercari.com/blog/entry/20201216-53796c2494/]
+
+## Test connection with gRPC
+to localhost
+```
+$ grpcurl -plaintext  -d '{"username":"aaa","password":"hoge"}' localhost:8080 umlquiz.UMLQuizLoginService.GetToken
+$ grpcurl -plaintext -d '{ "request": "hi" }' -rpc-header 'authorization: Bearer {token}' localhost:8080 umlquiz.UMLQuizHelloService.Hello
+```
+
+to CloudRun
+```
+grpcurl -proto umlquiz.proto  -d '{"request":"test"}' umlquiz-wphmvh57gq-uc.a.run.app:443 umlquiz.UMLQuizHelloService.Hello
+```
+
+## gRPC with auth
+Request Metadata
+| Name | Value |
+|:--|:--|
+|authorization|bearer {token}|
