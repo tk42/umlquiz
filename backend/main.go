@@ -12,6 +12,7 @@ import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 )
 
@@ -38,7 +39,8 @@ func main() {
 	// 	),
 	// )
 	// s := grpc.NewServer(authInterceptor)
-	s := grpc.NewServer()
+	s := grpc.NewServer(grpc.Creds(insecure.NewCredentials()))
+	// s := grpc.NewServer(grpc.WithInsecure()) // Deprecated
 	// umlquiz.RegisterUMLQuizLoginServiceServer(s, &loginServer)
 
 	presentation := InjectPresentation()
