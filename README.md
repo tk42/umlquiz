@@ -237,8 +237,8 @@ classDiagram
 
 
 ## Nextjs with gRPC
- - (Next.js で始める gRPC 通信)[https://numb86-tech.hatenablog.com/entry/2022/02/12/154459]
- - (OK Google, Protocol Buffers から生成したコードを使って Node.js で gRPC 通信して)[https://engineering.mercari.com/blog/entry/20201216-53796c2494/]
+ - [Next.js で始める gRPC 通信](https://numb86-tech.hatenablog.com/entry/2022/02/12/154459)
+ - [OK Google, Protocol Buffers から生成したコードを使って Node.js で gRPC 通信して](https://engineering.mercari.com/blog/entry/20201216-53796c2494/)
 
 ## Test connection with gRPC
 to localhost
